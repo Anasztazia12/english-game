@@ -20,14 +20,6 @@
 }
 
 /* Difficulty button hover */
-#difficulty-select button:hover {
-	/* use Bootstrap default */
-}
-
-/* Difficulty button active */
-#difficulty-select button:active {
-	/* use Bootstrap default */
-}
 
 /* Highlighted easy button */
 #btn-easy[style*="background: #ffb347"] {
@@ -89,9 +81,6 @@ h1 {
 }
 
 /* Mode button hover */
-#mode-select button:hover {
-	/* use Bootstrap default */
-}
 
 /* Game area */
 #game-area {
@@ -108,9 +97,6 @@ h1 {
 }
 
 /* Game area button hover */
-#game-area button:hover {
-	/* use Bootstrap default */
-}
 
 /* Feedback message */
 #feedback {
@@ -129,9 +115,6 @@ h1 {
 }
 
 /* Next button hover */
-#next-btn:hover {
-	/* use Bootstrap default */
-}
 
 /* Word bank for sentence order */
 #word-bank {
