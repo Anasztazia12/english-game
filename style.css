@@ -12,29 +12,21 @@
 
 /* Difficulty buttons */
 #difficulty-select button {
-	background: #ffe082;
-	color: #444;
-	border: none;
 	border-radius: 8px;
 	padding: 8px 16px;
 	margin: 0 4px;
 	font-size: 1em;
-	cursor: pointer;
-	transition: background 0.2s, color 0.2s;
 	font-weight: bold;
-	box-shadow: 0 2px 8px rgba(255, 193, 7, 0.08);
 }
 
 /* Difficulty button hover */
 #difficulty-select button:hover {
-	background: #ffd54f;
-	color: #ff6f61;
+	/* use Bootstrap default */
 }
 
 /* Difficulty button active */
 #difficulty-select button:active {
-	background: #ffb300;
-	color: #fff;
+	/* use Bootstrap default */
 }
 
 /* Highlighted easy button */
@@ -90,20 +82,15 @@ h1 {
 
 /* Mode buttons */
 #mode-select button {
-	background: #ffb347;
-	color: #fff;
-	border: none;
 	border-radius: 8px;
 	padding: 10px 18px;
 	margin: 0 6px;
 	font-size: 1em;
-	cursor: pointer;
-	transition: background 0.2s;
 }
 
 /* Mode button hover */
 #mode-select button:hover {
-	background: #ff6f61;
+	/* use Bootstrap default */
 }
 
 /* Game area */
@@ -114,20 +101,15 @@ h1 {
 
 /* Game area buttons */
 #game-area button {
-	background: #6ec6ff;
-	color: #fff;
-	border: none;
 	border-radius: 8px;
 	padding: 8px 16px;
 	margin: 6px 6px 0 0;
 	font-size: 1em;
-	cursor: pointer;
-	transition: background 0.2s;
 }
 
 /* Game area button hover */
 #game-area button:hover {
-	background: #0288d1;
+	/* use Bootstrap default */
 }
 
 /* Feedback message */
@@ -140,20 +122,15 @@ h1 {
 
 /* Next button */
 #next-btn {
-	background: #81c784;
-	color: #fff;
-	border: none;
 	border-radius: 8px;
 	padding: 10px 22px;
 	font-size: 1em;
-	cursor: pointer;
 	margin-top: 10px;
-	transition: background 0.2s;
 }
 
 /* Next button hover */
 #next-btn:hover {
-	background: #388e3c;
+	/* use Bootstrap default */
 }
 
 /* Word bank for sentence order */
