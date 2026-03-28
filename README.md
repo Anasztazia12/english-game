@@ -1,4 +1,3 @@
-
 # English Game
 
 An interactive web-based game for practicing English sentences, designed for children (Year 3–5) and beginner learners.
@@ -23,10 +22,29 @@ An interactive web-based game for practicing English sentences, designed for chi
 3. Choose a game mode.
 4. Play and practice English sentences!
 
-## Customization
+## Customization & Development
 
-- To add more sentence patterns or vocabulary, edit the JavaScript in `index.html`.
-- Replace `correct.mp3` and `wrong.mp3` for custom sound effects.
+- All game logic is now in `english-game.js`. To add new sentence patterns, verbs, or objects, edit this file.
+- The HTML (`index.html`) only contains the UI structure and loads the JS.
+- To change sound effects, replace `correct.mp3` and `wrong.mp3` (if present).
+- For design changes, edit `style.css`.
+
+## File Structure
+
+- `index.html` – Main HTML, loads the UI and JS
+- `english-game.js` – All game logic, question generation, and state
+- `style.css` – All styles, responsive and modern look
+
+## How to Use / Run
+
+1. Download or clone the repository.
+2. Open `index.html` in your browser (no server needed).
+3. Play!
+
+## Extending the Game
+
+- To add new verbs or objects, update the `verbs` and `verbObjects` in `english-game.js`.
+- To add new game modes, create new functions in `english-game.js` and add UI in `index.html`.
 
 ## Requirements
 
