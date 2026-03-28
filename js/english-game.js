@@ -1,3 +1,32 @@
+// ===================== ORDER KÉRDÉSEK GENERÁLÁSA =====================
+function generateOrderQuestions(difficulty) {
+    let questions = [];
+    const combos = [
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "go", objs: ["to the park", "to school", "home", "to the garden"]},
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "the ball", "with friends", "in the garden"]},
+        {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "have", objs: ["breakfast", "a book", "homework", "a cake"]},
+        {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
+    ];
+    for (let i=0;i<20;i++){
+        let subj, verb, obj;
+        let valid = false;
+        while (!valid) {
+            const combo = combos[Math.floor(Math.random()*combos.length)];
+            subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
+            verb = combo.verb;
+            obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
+            valid = true;
+        }
+        const sentence = `${subj} ${verb} ${obj}.`;
+        const words = sentence.replace('.','').split(' ');
+        questions.push({words, answer:sentence});
+    }
+    return questions;
+}
 // english-game.js
 // Minden játéklogika és változó ide került át az index.html-ből
 
@@ -82,9 +111,12 @@ function generateFillQuestions(difficulty) {
         {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "go", objs: ["to the park", "to school", "home", "to the garden"]},
         // eat
         {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
-        // play (ember: minden, kutya: csak labda, kert, barátok)
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "the ball", "with friends", "in the garden"]},
+        // play (ember: zene, dal, zongora, kutya: labda, kert, barátok)
+        {subj: ["I","You","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "with friends", "in the garden"]},
+        {subj: ["He","She"], verb: "play", objs: ["music", "a song", "the piano"]},
         {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
+        // play the ball csak: We, They, The children
+        {subj: ["We","They","The children"], verb: "play", objs: ["the ball"]},
         // read
         {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
         // have
@@ -101,6 +133,8 @@ function generateFillQuestions(difficulty) {
             subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
             verb = verbs.find(v => v.base === combo.verb);
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
+            // Szűrés: "play the ball" csak We, They, The children
+            if (verb.base === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
             valid = true;
         }
         const answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verb.present[1]:verb.present[0]);
@@ -119,11 +153,14 @@ function showQuestion(){
     const area = document.getElementById('game-area');
     area.innerHTML='';
     const btnColors = [...colors].sort(()=>Math.random()-0.5);
+    // Kérdésszámláló
+    let total = (mode==='fill') ? fillQuestions.length : orderQuestions.length;
+    area.innerHTML += `<div style="font-weight:bold; margin-bottom:10px;">Question ${current+1} / ${total}</div>`;
 
     if(mode==='fill'){
         const q = fillQuestions[current];
         const sentence = q.sentence.replace('___','<span id="blank"></span>');
-        area.innerHTML=`<p>${sentence}</p>`;
+        area.innerHTML+=`<p>${sentence}</p>`;
         q.options.forEach((opt,i)=>{
             const btn=document.createElement('button');
             btn.textContent=opt;
@@ -134,7 +171,7 @@ function showQuestion(){
     } else if(mode==='order'){
         const q = orderQuestions[current];
         const shuffled = [...q.words].sort(()=>Math.random()-0.5);
-        area.innerHTML='<div id="word-bank"></div><div id="sentence"></div>';
+        area.innerHTML+='<div id="word-bank"></div><div id="sentence"></div>';
         const bank = document.getElementById('word-bank');
         shuffled.forEach((word,i)=>{
             const btn=document.createElement('button');
@@ -152,8 +189,11 @@ function checkFillAnswer(selected){
     if(selected===q.answer){
         feedback.textContent='Correct!';
         feedback.style.color='green';
-        fillScore++;
-        if(current < 19){
+        if(!q.answeredCorrectly) {
+            fillScore++;
+            q.answeredCorrectly = true;
+        }
+        if(current < fillQuestions.length-1){
             document.getElementById('next-btn').style.display='inline';
         } else {
             document.getElementById('next-btn').style.display='none';
@@ -186,8 +226,11 @@ function checkOrderAnswer(){
         if(userSentence===q.answer){
             feedback.textContent='Correct!';
             feedback.style.color='green';
-            orderScore++;
-            if(current < 19){
+            if(!q.answeredCorrectly) {
+                orderScore++;
+                q.answeredCorrectly = true;
+            }
+            if(current < orderQuestions.length-1){
                 document.getElementById('next-btn').style.display='inline';
             } else {
                 document.getElementById('next-btn').style.display='none';
@@ -206,7 +249,15 @@ function showFinalScore(modeType){
     const score = (modeType==='fill')?fillScore:orderScore;
     const feedback = document.getElementById('feedback');
     let message = `Your score: ${score} / ${total}. `;
-    message += (score>=total*0.8)?'Congratulations!':'Keep practicing!';
+    if(score >= 17){
+        message += 'Congratulations!';
+    } else if(score >= 13){
+        message += 'Keep up the good work!';
+    } else if(score >= 7){
+        message += 'Keep practicing!';
+    } else {
+        message += 'Try again!';
+    }
     feedback.textContent = message;
     document.getElementById('next-btn').style.display='none';
 }
