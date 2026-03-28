@@ -125,25 +125,63 @@ function generateFillQuestions(difficulty) {
         // like
         {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
     ];
+    const tenses = ["present_simple", "present_continuous", "past_simple", "past_continuous", "future_simple", "future_continuous"];
     for (let i=0;i<20;i++){
-        let subj, verb, obj, verbObj;
+        let subj, verb, obj, verbObj, tense;
         let valid = false;
         while (!valid) {
             const combo = combos[Math.floor(Math.random()*combos.length)];
             subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
             verb = verbs.find(v => v.base === combo.verb);
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
+            tense = tenses[Math.floor(Math.random()*tenses.length)];
             // Szűrés: "play the ball" csak We, They, The children
             if (verb.base === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
             valid = true;
         }
-        const answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verb.present[1]:verb.present[0]);
+        let answer, sentence;
+        // Egyszerű jelen
+        if(tense==="present_simple"){
+            answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verb.present[1]:verb.present[0]);
+            sentence = `${subj} <span class='blank-line'></span> ${obj}.`;
+        }
+        // Folyamatos jelen
+        else if(tense==="present_continuous"){
+            let be = (["He","She","Anna","My brother","The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
+            answer = be + " " + verb.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} now.`;
+        }
+        // Egyszerű múlt
+        else if(tense==="past_simple"){
+            answer = verb.past;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} yesterday.`;
+        }
+        // Folyamatos múlt
+        else if(tense==="past_continuous"){
+            let was = (["He","She","Anna","My brother","The dog","I"].includes(subj) ? "was" : "were");
+            answer = was + " " + verb.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} yesterday at 5.`;
+        }
+        // Egyszerű jövő
+        else if(tense==="future_simple"){
+            answer = "will " + verb.base;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow.`;
+        }
+        // Folyamatos jövő
+        else if(tense==="future_continuous"){
+            answer = "will be " + verb.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow at 5.`;
+        }
         const options = new Set([answer]);
         while(options.size<3){
-            const forms = [verb.base, verb.past, verb.ing, verb.present[0], verb.present[1]];
+            const forms = [verb.base, verb.past, verb.ing, verb.present[0], verb.present[1], "will "+verb.base, "will be "+verb.ing];
+            // Folyamatosakhoz be/was/were nélkül is lehet zavaró opció
+            if(tense==="present_continuous" || tense==="past_continuous" || tense==="future_continuous") {
+                forms.push(verb.ing);
+            }
             options.add(forms[Math.floor(Math.random()*forms.length)]);
         }
-        questions.push({sentence:`${subj} <span class='blank-line'></span> ${obj}.`, options:Array.from(options), answer});
+        questions.push({sentence, options:Array.from(options), answer});
     }
     return questions;
 }
