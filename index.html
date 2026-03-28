@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+</body>
+    <div class="container">
+        <h1>English Game</h1>
+        <div id="difficulty-select">
+            <label>Difficulty: </label>
+            <button onclick="setDifficulty('easy')" id="btn-easy">Easy</button>
+            <button onclick="setDifficulty('hard')" id="btn-hard">Hard</button>
+        </div>
+        <div id="mode-select">
+            <button onclick="setMode('fill')">Fill in the blank</button>
+            <button onclick="setMode('order')">Sentence order</button>
+        </div>
+        <div id="game-area"></div>
+        <div id="feedback"></div>
+        <button id="next-btn" style="display:none;" onclick="nextQuestion()">Next</button>
+        <!-- Sounds -->
+        <audio id="audio-correct" src="correct.mp3" preload="auto"></audio>
+        <audio id="audio-wrong" src="wrong.mp3" preload="auto"></audio>
+    </div>
+    <script>
+    // Automatikus mondatgenerátor: egyszerű és nehezebb mondatok
+    function generateFillQuestions(difficulty) {
+        const subjects = ["I", "You", "He", "She", "We", "They", "My brother", "The dog", "Anna", "The children"];
+        const verbs = [
+            { base: "go", present: ["go", "goes"], ing: "going", past: "went" },
+            { base: "eat", present: ["eat", "eats"], ing: "eating", past: "ate" },
+            { base: "play", present: ["play", "plays"], ing: "playing", past: "played" },
+            { base: "read", present: ["read", "reads"], ing: "reading", past: "read" },
+            { base: "have", present: ["have", "has"], ing: "having", past: "had" },
+            { base: "like", present: ["like", "likes"], ing: "liking", past: "liked" },
+            { base: "see", present: ["see", "sees"], ing: "seeing", past: "saw" },
+            { base: "make", present: ["make", "makes"], ing: "making", past: "made" },
+            { base: "write", present: ["write", "writes"], ing: "writing", past: "wrote" },
+            { base: "sing", present: ["sing", "sings"], ing: "singing", past: "sang" }
+        ];
+        const objects = ["a cake", "homework", "music", "a book", "breakfast", "a song", "the ball", "the piano", "a letter", "the park", "fast", "well", "every day", "yesterday", "now", "at school", "in the garden", "with friends", "in the morning"];
+        const tenses = [
+            { name: "present simple", template: (s, v, o) => `${s} ___ ${o}.`, options: v => v.present, answer: (s, v) => (["He","She","Anna","The dog","My brother"].includes(s) ? v.present[1] : v.present[0]) },
+            { name: "present continuous", template: (s, v, o) => `${s} ___ ${v.ing} ${o}.`, options: v => ["am", "is", "are"], answer: (s) => (s === "I" ? "am" : (["He","She","Anna","The dog","My brother"].includes(s) ? "is" : "are")) },
+            { name: "past simple", template: (s, v, o) => `${s} ___ ${o}.`, options: v => [v.past, v.base, v.present[0]], answer: (s, v) => v.past },
+        ];
+        let questions = [];
+        // Easy: csak present simple, "to be" mondatok
+        if (difficulty === 'easy') {
+            for (let i = 0; i < 40; i++) {
+                const subj = subjects[Math.floor(Math.random()*subjects.length)];
+                const verb = verbs[Math.floor(Math.random()*verbs.length)];
+                const obj = objects[Math.floor(Math.random()*objects.length)];
+                questions.push({
+                    sentence: `${subj} ___ ${obj}.`,
+                    options: verb.present,
+                    answer: (["He","She","Anna","The dog","My brother"].includes(subj) ? verb.present[1] : verb.present[0])
+                });
+            }
+            const beSubjects = ["I", "You", "He", "She", "We", "They", "It"];
+            const beComplements = ["happy", "sad", "hungry", "at home", "in the park", "a teacher", "students", "my friend", "tired", "tall", "ready", "here", "late", "early"];
+            for (let i = 0; i < 20; i++) {
+                const s = beSubjects[Math.floor(Math.random()*beSubjects.length)];
+                const c = beComplements[Math.floor(Math.random()*beComplements.length)];
+                questions.push({
+                    sentence: `${s} ___ ${c}.`,
+                    options: ["am", "is", "are"],
+                    answer: (s === "I" ? "am" : (s === "He" || s === "She" || s === "It" ? "is" : "are"))
+                });
+            }
+        } else {
+            // Hard: mindenféle igeidő, tagadó, kérdő
+            for (let i = 0; i < 50; i++) {
+                const subj = subjects[Math.floor(Math.random()*subjects.length)];
+                const verb = verbs[Math.floor(Math.random()*verbs.length)];
+                const obj = objects[Math.floor(Math.random()*objects.length)];
+                const tense = tenses[Math.floor(Math.random()*tenses.length)];
+                questions.push({
+                    sentence: tense.template(subj, verb, obj),
+                    options: tense.options(verb),
+                    answer: tense.answer(subj, verb)
+                });
+            }
+            const beSubjects = ["I", "You", "He", "She", "We", "They", "It"];
+            const beComplements = ["happy", "sad", "hungry", "at home", "in the park", "a teacher", "students", "my friend", "tired", "tall", "ready", "here", "late", "early"];
+            for (let i = 0; i < 20; i++) {
+                const s = beSubjects[Math.floor(Math.random()*beSubjects.length)];
+                const c = beComplements[Math.floor(Math.random()*beComplements.length)];
+                questions.push({
+                    sentence: `${s} ___ ${c}.`,
+                    options: ["am", "is", "are"],
+                    answer: (s === "I" ? "am" : (s === "He" || s === "She" || s === "It" ? "is" : "are"))
+                });
+            }
+            for (let i = 0; i < 20; i++) {
+                const subj = subjects[Math.floor(Math.random()*subjects.length)];
+                const verb = verbs[Math.floor(Math.random()*verbs.length)];
+                const obj = objects[Math.floor(Math.random()*objects.length)];
+                // Tagadó
+                questions.push({
+                    sentence: `${subj} ___ not ${verb.base} ${obj}.`,
+                    options: ["do", "does", "did"],
+                    answer: (["He","She","Anna","The dog","My brother"].includes(subj) ? "does" : "do")
+                });
+                // Kérdő
+                questions.push({
+                    sentence: `___ ${subj.toLowerCase()} ${verb.base} ${obj}?`,
+                    options: ["Do", "Does", "Did"],
+                    answer: (["He","She","Anna","The dog","My brother"].includes(subj) ? "Does" : "Do")
+                });
+            }
+        }
+        return questions;
+    }
+
+    function generateOrderQuestions(difficulty) {
+        const subjects = ["I", "You", "He", "She", "We", "They", "My brother", "The dog", "Anna", "The children"];
+        const verbs = ["like", "play", "eat", "read", "see", "make", "write", "sing", "have", "want", "love", "find", "watch", "open", "close", "draw", "run", "walk", "visit", "help"];
+        const objects = ["apples", "music", "a book", "breakfast", "a song", "the ball", "the piano", "a letter", "the park", "fast", "well", "every day", "yesterday", "now", "at school", "in the garden", "with friends", "in the morning", "the door", "the window", "the zoo", "the teacher", "the lesson", "the homework"];
+        let questions = [];
+        if (difficulty === 'easy') {
+            for (let i = 0; i < 50; i++) {
+                const s = subjects[Math.floor(Math.random()*subjects.length)];
+                const v = verbs[Math.floor(Math.random()*verbs.length)];
+                const o = objects[Math.floor(Math.random()*objects.length)];
+                const sentence = `${s} ${v} ${o}.`;
+                const words = sentence.replace('.', '').split(' ');
+                questions.push({
+                    words,
+                    answer: sentence
+                });
+            }
+        } else {
+            for (let i = 0; i < 60; i++) {
+                const s = subjects[Math.floor(Math.random()*subjects.length)];
+                const v = verbs[Math.floor(Math.random()*verbs.length)];
+                const o = objects[Math.floor(Math.random()*objects.length)];
+                const sentence = `${s} ${v} ${o}.`;
+                const words = sentence.replace('.', '').split(' ');
+                questions.push({
+                    words,
+                    answer: sentence
+                });
+            }
+            for (let i = 0; i < 20; i++) {
+                const s = subjects[Math.floor(Math.random()*subjects.length)];
+                const v = verbs[Math.floor(Math.random()*verbs.length)];
+                const o = objects[Math.floor(Math.random()*objects.length)];
+                // Kérdő
+                const q1 = [`Do`, s.toLowerCase(), v, o.replace('.', ''), '?'];
+                questions.push({
+                    words: q1,
+                    answer: `Do ${s.toLowerCase()} ${v} ${o.replace('.', '')}?`
+                });
+                // Tagadó
+                const q2 = [s, "do", "not", v, o.replace('.', '')];
+                questions.push({
+                    words: q2,
+                    answer: `${s} do not ${v} ${o.replace('.', '')}.`
+                });
+            }
+        }
+        return questions;
+    }
+
+    let difficulty = 'easy';
+    let fillQuestions = generateFillQuestions(difficulty);
+    let orderQuestions = generateOrderQuestions(difficulty);
+
+    function setDifficulty(newDiff) {
+        difficulty = newDiff;
+        fillQuestions = generateFillQuestions(difficulty);
+        orderQuestions = generateOrderQuestions(difficulty);
+        current = 0;
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+        showQuestion();
+        // Gombok kiemelése
+        document.getElementById('btn-easy').style.background = (difficulty === 'easy') ? '#ffb347' : '';
+        document.getElementById('btn-hard').style.background = (difficulty === 'hard') ? '#ffb347' : '';
+    }
+
+    // Indításkor kiemelés
+    window.onload = () => {
+        document.getElementById('btn-easy').style.background = '#ffb347';
+        showQuestion();
+    };
+
+    let mode = 'fill';
+    let current = 0;
+
+    function setMode(newMode) {
+        mode = newMode;
+        current = 0;
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const area = document.getElementById('game-area');
+        area.innerHTML = '';
+        if (mode === 'fill') {
+            const q = fillQuestions[current];
+            // A blank helyén vonal jelenik meg
+            const sentence = q.sentence.replace('___', '<span id="blank"></span>');
+            area.innerHTML = `<p>${sentence}</p>`;
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.textContent = opt;
+                btn.onclick = () => checkFillAnswer(opt);
+                area.appendChild(btn);
+            });
+        } else if (mode === 'order') {
+            const q = orderQuestions[current];
+            const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+            area.innerHTML = '<div id="word-bank"></div><div id="sentence"></div>';
+            const bank = document.getElementById('word-bank');
+            shuffled.forEach(word => {
+                const btn = document.createElement('button');
+                btn.textContent = word;
+                btn.onclick = () => pickWord(btn);
+                bank.appendChild(btn);
+            });
+        }
+    }
+
+    function playSound(type) {
+        const audio = document.getElementById(type === 'correct' ? 'audio-correct' : 'audio-wrong');
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play();
+        }
+    }
+
+    function checkFillAnswer(selected) {
+        const q = fillQuestions[current];
+        const feedback = document.getElementById('feedback');
+        if (selected === q.answer) {
+            feedback.textContent = 'Correct!';
+            feedback.style.color = 'green';
+            playSound('correct');
+        } else {
+            feedback.textContent = 'Try again!';
+            feedback.style.color = 'red';
+            playSound('wrong');
+            return;
+        }
+        document.getElementById('next-btn').style.display = (current < fillQuestions.length - 1) ? 'inline' : 'none';
+    }
+
+    function pickWord(btn) {
+        const sentenceDiv = document.getElementById('sentence');
+        sentenceDiv.append(btn);
+        btn.onclick = null;
+        btn.style.margin = '0 4px';
+        checkOrderAnswer();
+    }
+
+    function checkOrderAnswer() {
+        const sentenceDiv = document.getElementById('sentence');
+        const words = Array.from(sentenceDiv.children).map(b => b.textContent);
+        const q = orderQuestions[current];
+        const feedback = document.getElementById('feedback');
+        if (words.length === q.words.length) {
+            const userSentence = words.join(' ') + '.';
+            if (userSentence === q.answer) {
+                feedback.textContent = 'Correct!';
+                feedback.style.color = 'green';
+                playSound('correct');
+                document.getElementById('next-btn').style.display = (current < orderQuestions.length - 1) ? 'inline' : 'none';
+            } else {
+                feedback.textContent = 'Try again!';
+                feedback.style.color = 'red';
+                playSound('wrong');
+            }
+        } else {
+            feedback.textContent = '';
+        }
+    }
+
+    function nextQuestion() {
+        current++;
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+        showQuestion();
+    }
+
+    // Indításkor első kérdés
+    window.onload = () => {
+        showQuestion();
+    };
+    </script>
+</body>
+</html>
