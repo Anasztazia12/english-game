@@ -1,29 +1,4 @@
-.container {
-        max-width: 500px;
-        margin: 40px auto;
-        background: #fff;
-        border: 3px solid #b3b3ff;
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        padding: 32px 24px 24px 24px;
-}
 
-@media (max-width: 600px) {
-    .container {
-        max-width: 98vw;
-        padding: 16px 4vw 16px 4vw;
-        border-radius: 12px;
-        font-size: 0.98em;
-    }
-    h1, h2 {
-        font-size: 1.2em;
-    }
-    #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
-        min-width: 90px;
-        font-size: 0.95em;
-        padding: 8px 10px;
-    }
-}
 /* háttér */
 body {
     text-align: center;
@@ -32,16 +7,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* keret az egész játéknak */
-.container {
-    max-width: 500px;
-    margin: 40px auto;
-    background: #fff;
-    border: 3px solid #b3b3ff;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-    padding: 32px 24px 24px 24px;
-}
 
 /* cím */
 h1 {
@@ -54,26 +19,19 @@ h1 {
     margin-top: 20px;
 }
 
-/* gombok alap (Bootstrap kiegészítés) */
+/* gombok alap (Bootstrap kiegészítés, csak minimális extra) */
 #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
-    min-width: 120px;
-    font-weight: bold;
     border-radius: 15px;
-    transition: all 0.2s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Egységes Back és Home gomb színek */
+/* Egységes Back és Home gomb stílus, csak ha szükséges */
 .btn-back, .btn-home {
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    border: 1.5px solid #adb5bd !important;
+    font-weight: bold;
+    color: black;
 }
-.btn-back:hover, .btn-home:hover {
-    background-color: #e2e6ea !important;
-    color: #212529 !important;
-}
-/* fill in the blank vonal */
+
+/* fill in the blank line */
 .blank-line {
     display: inline-block;
     border-bottom: 2.5px solid #888;
@@ -119,12 +77,58 @@ h1 {
     font-weight: bold;
 }
 
-/* kis animáció a teljes oldalnak */
+/* kis animáció és téglalap keret a teljes oldalnak */
 .container {
     animation: fadeIn 0.4s ease;
+    background: #d4d0d0;
+    border: 3px solid #b3b3b3;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    padding: 32px 24px 32px 24px;
+    max-width: 600px;
+    margin: 40px auto;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px);}
     to { opacity: 1; transform: translateY(0);}
+}
+
+@media (max-width: 600px) {
+    .container {
+        max-width: 98vw;
+        padding: 16px 4vw 16px 4vw;
+        border-radius: 12px;
+        font-size: 0.98em;
+    }
+    h1, h2 {
+        font-size: 1.2em;
+    }
+    #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
+        min-width: 90px;
+        font-size: 0.95em;
+        padding: 8px 10px;
+    }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+
+@media (max-width: 600px) {
+    .container {
+        max-width: 98vw;
+        padding: 16px 4vw 16px 4vw;
+        border-radius: 12px;
+        font-size: 0.98em;
+    }
+    h1, h2 {
+        font-size: 1.2em;
+    }
+    #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
+        min-width: 90px;
+        font-size: 0.95em;
+        padding: 8px 10px;
+    }
 }

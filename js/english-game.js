@@ -74,36 +74,6 @@ function backToMode() { document.getElementById('difficulty-select').style.displ
 function backToDifficulty() { document.getElementById('game-area').style.display='none'; document.getElementById('game-nav').style.display='none'; document.getElementById('difficulty-select').style.display=''; }
 
 // ===================== KÉRDÉSEK GENERÁLÁSA =====================
-    const totalQuestions = 20;
-    let qIndex = current;
-    let isFill = (mode==='fill');
-    let q;
-    if (isFill) {
-        if (qIndex >= totalQuestions) { showFinalScore('fill'); return; }
-        q = fillQuestions[qIndex];
-        const sentence = q.sentence.replace('___','<span id="blank"></span>');
-        area.innerHTML=`<p>${sentence}</p>`;
-        q.options.forEach((opt,i)=>{
-            const btn=document.createElement('button');
-            btn.textContent=opt;
-            btn.className="btn btn-"+btnColors[i]+" m-2";
-            btn.onclick=()=>checkFillAnswer(opt);
-            area.appendChild(btn);
-        });
-    } else if (mode==='order') {
-        if (qIndex >= totalQuestions) { showFinalScore('order'); return; }
-        q = orderQuestions[qIndex];
-        const shuffled = [...q.words].sort(()=>Math.random()-0.5);
-        area.innerHTML='<div id="word-bank"></div><div id="sentence"></div>';
-        const bank = document.getElementById('word-bank');
-        shuffled.forEach((word,i)=>{
-            const btn=document.createElement('button');
-            btn.textContent=word;
-            btn.className="btn btn-"+btnColors[i]+" m-2";
-            btn.onclick=()=>pickWord(btn);
-            bank.appendChild(btn);
-        });
-    }
 function generateFillQuestions(difficulty) {
     let questions = [];
     // Csak értelmes subject-verb-object hármasokat engedünk
@@ -113,8 +83,8 @@ function generateFillQuestions(difficulty) {
         // eat
         {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
         // play (ember: minden, kutya: csak labda, kert, barátok)
-        document.getElementById('next-btn').style.display=(current<20-1)?'inline':'none';
-        if(current===20-1) showFinalScore('fill');
+        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "the ball", "with friends", "in the garden"]},
+        {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
         // read
         {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
         // have
@@ -133,47 +103,13 @@ function generateFillQuestions(difficulty) {
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
             valid = true;
         }
-            document.getElementById('next-btn').style.display=(current<20-1)?'inline':'none';
-            if(current===20-1) showFinalScore('order');
+        const answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verb.present[1]:verb.present[0]);
+        const options = new Set([answer]);
         while(options.size<3){
             const forms = [verb.base, verb.past, verb.ing, verb.present[0], verb.present[1]];
             options.add(forms[Math.floor(Math.random()*forms.length)]);
         }
         questions.push({sentence:`${subj} <span class='blank-line'></span> ${obj}.`, options:Array.from(options), answer});
-    }
-    return questions;
-}
-
-    const total = 20;
-    let questions = [];
-    // Csak értelmes subject-verb-object hármasokat engedünk
-    const combos = [
-    if(score>=18){
-        message += 'Congratulations!';
-    } else {
-        message += 'Keep practicing!';
-    }
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "the ball", "with friends", "in the garden"]},
-        {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "have", objs: ["breakfast", "a book", "homework", "a cake"]},
-        {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
-    ];
-    for (let i=0;i<20;i++){
-        let subj, verb, obj;
-        let valid = false;
-        while (!valid) {
-            const combo = combos[Math.floor(Math.random()*combos.length)];
-            subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
-            verb = combo.verb;
-            obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
-            valid = true;
-        }
-        const sentence = `${subj} ${verb} ${obj}.`;
-        const words = sentence.replace('.','').split(' ');
-        questions.push({words, answer:sentence});
     }
     return questions;
 }

@@ -27,7 +27,7 @@
         <button class="btn btn-danger m-2" onclick="chooseMode('fill')">Fill in the blank</button>
         <button class="btn btn-success m-2" onclick="chooseMode('order')">Sentence order</button>
         <div class="mt-3">
-            <button class="btn btn-home btn-light" onclick="goHome()">Home</button>
+            <button class="btn btn-home btn-outline-info" onclick="goHome()">Home</button>
         </div>
     </div>
 
@@ -37,23 +37,21 @@
         <button class="btn btn-success m-2" onclick="chooseDifficulty('easy')" id="btn-easy">Easy</button>
         <button class="btn btn-danger m-2" onclick="chooseDifficulty('hard')" id="btn-hard">Hard</button>
         <div class="mt-3">
-            <button class="btn btn-back btn-light me-2" onclick="backToMode()">Back</button>
-            <button class="btn btn-home btn-light" onclick="goHome()">Home</button>
+            <button class="btn btn-back btn-outline-warning" onclick="backToMode()">Back</button>
+            <button class="btn btn-home btn-outline-info" onclick="goHome()">Home</button>
         </div>
     </div>
 
+
     <!-- Játékterület -->
     <div id="game-area" style="display:none;"></div>
-
     <!-- Navigáció -->
     <div id="game-nav" style="display:none;" class="mt-3">
-        <button class="btn btn-back btn-light me-2" onclick="backToDifficulty()">Back</button>
-        <button class="btn btn-home btn-light" onclick="goHome()">Home</button>
+        <button class="btn btn-back btn-outline-danger" onclick="backToDifficulty()">Back</button>
+        <button class="btn btn-home btn-outline-success" onclick="goHome()">Home</button>
     </div>
-
     <!-- Feedback -->
     <div id="feedback"></div>
-
     <!-- Next gomb -->
     <button id="next-btn" class="btn btn-primary mt-3" style="display:none;" onclick="nextQuestion()">Next</button>
 </div>
