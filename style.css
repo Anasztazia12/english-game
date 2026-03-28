@@ -165,4 +165,50 @@ h1 {
 #sentence {
 	min-height: 36px;
 	margin-bottom: 8px;
+	word-break: break-word;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+	.container {
+		max-width: 98vw;
+		padding: 16px 4vw 16px 4vw;
+		min-height: unset;
+		margin: 16px auto 0 auto;
+	}
+	h1, h2, h3 {
+		font-size: 1.2rem;
+		text-align: center;
+	}
+	button, .btn {
+		font-size: 1rem;
+		padding: 8px 10px;
+		min-width: 90px;
+	}
+	#sentence, #question, #feedback {
+		font-size: 1rem;
+		padding: 4px 0;
+	}
+	.form-control {
+		font-size: 1rem;
+		padding: 6px 8px;
+	}
+	.btn-group, .d-flex {
+		flex-direction: column !important;
+		gap: 8px;
+	}
+}
+
+@media (max-width: 400px) {
+	.container {
+		padding: 8px 2vw 8px 2vw;
+	}
+	h1, h2, h3 {
+		font-size: 1rem;
+	}
+	button, .btn {
+		font-size: 0.95rem;
+		padding: 6px 6px;
+		min-width: 70px;
+	}
 }

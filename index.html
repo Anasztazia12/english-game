@@ -5,23 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Game</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6DQD5l5/2Qp1Nn91p1ZV+zF5SRh5e5Z1F5F5F5F5F5F5" crossorigin="anonymous">
 </head>
 <body>
 </body>
     <div class="container">
         <h1>English Game</h1>
-        <div id="difficulty-select">
-            <label>Difficulty: </label>
-            <button onclick="setDifficulty('easy')" id="btn-easy">Easy</button>
-            <button onclick="setDifficulty('hard')" id="btn-hard">Hard</button>
+        <div id="start-area">
+            <button id="start-btn" class="btn btn-lg fw-bold text-uppercase" style="font-size:1.3rem; letter-spacing:1px; background: linear-gradient(90deg, #ffb347 0%, #ff6f61 100%); color: #fff; border: none; border-radius: 1.5rem; box-shadow: 0 4px 18px rgba(255,111,97,0.13); transition: transform 0.15s; padding: 0.9rem 2.2rem;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="showModeSelect()">
+                <span style="font-family: 'Comic Sans MS', 'Comic Sans', cursive, Arial, sans-serif;">Start Game</span>
+            </button>
         </div>
-        <div id="mode-select">
-            <button onclick="setMode('fill')">Fill in the blank</button>
-            <button onclick="setMode('order')">Sentence order</button>
+        <div id="mode-select" style="display:none;">
+            <h2>Select Game Mode</h2>
+            <button class="btn btn-success m-2" onclick="chooseMode('fill')">Fill in the blank</button>
+            <button class="btn btn-info m-2" onclick="chooseMode('order')">Sentence order</button>
+            <div class="mt-3">
+                <button class="btn btn-secondary" onclick="goHome()">Home</button>
+            </div>
         </div>
-        <div id="game-area"></div>
+        <div id="difficulty-select" style="display:none;">
+            <h2>Select Difficulty</h2>
+            <button class="btn btn-warning m-2" onclick="chooseDifficulty('easy')" id="btn-easy">Easy</button>
+            <button class="btn btn-danger m-2" onclick="chooseDifficulty('hard')" id="btn-hard">Hard</button>
+            <div class="mt-3">
+                <button class="btn btn-secondary me-2" onclick="backToMode()">Back</button>
+                <button class="btn btn-secondary" onclick="goHome()">Home</button>
+            </div>
+        </div>
+        <div id="game-area" style="display:none;"></div>
+        <div id="game-nav" style="display:none;" class="mt-3">
+            <button class="btn btn-secondary me-2" onclick="backToDifficulty()">Back</button>
+            <button class="btn btn-secondary" onclick="goHome()">Home</button>
+        </div>
         <div id="feedback"></div>
-        <button id="next-btn" style="display:none;" onclick="nextQuestion()">Next</button>
+        <button id="next-btn" class="btn btn-primary mt-3" style="display:none;" onclick="nextQuestion()">Next</button>
         <!-- Sounds -->
         <audio id="audio-correct" src="correct.mp3" preload="auto"></audio>
         <audio id="audio-wrong" src="wrong.mp3" preload="auto"></audio>
@@ -120,7 +139,7 @@
     function generateOrderQuestions(difficulty) {
         const subjects = ["I", "You", "He", "She", "We", "They", "My brother", "The dog", "Anna", "The children"];
         const verbs = ["like", "play", "eat", "read", "see", "make", "write", "sing", "have", "want", "love", "find", "watch", "open", "close", "draw", "run", "walk", "visit", "help"];
-        const objects = ["apples", "music", "a book", "breakfast", "a song", "the ball", "the piano", "a letter", "the park", "fast", "well", "every day", "yesterday", "now", "at school", "in the garden", "with friends", "in the morning", "the door", "the window", "the zoo", "the teacher", "the lesson", "the homework"];
+        const objects = ["apples", "music", "a book", "breakfast", "a song", "the ball", "the piano", "a letter", "the park", "the door", "the window", "the zoo", "the teacher", "the lesson", "the homework"];
         let questions = [];
         if (difficulty === 'easy') {
             for (let i = 0; i < 50; i++) {
@@ -168,50 +187,93 @@
     }
 
     let difficulty = 'easy';
-    let fillQuestions = generateFillQuestions(difficulty);
-    let orderQuestions = generateOrderQuestions(difficulty);
+    let mode = 'fill';
+    let fillQuestions = [];
+    let orderQuestions = [];
+    let current = 0;
 
-    function setDifficulty(newDiff) {
+    function showModeSelect() {
+        document.getElementById('start-area').style.display = 'none';
+        document.getElementById('mode-select').style.display = '';
+        document.getElementById('difficulty-select').style.display = 'none';
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('game-nav').style.display = 'none';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function chooseMode(selectedMode) {
+        mode = selectedMode;
+        document.getElementById('mode-select').style.display = 'none';
+        document.getElementById('difficulty-select').style.display = '';
+        document.getElementById('game-nav').style.display = 'none';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function chooseDifficulty(newDiff) {
         difficulty = newDiff;
         fillQuestions = generateFillQuestions(difficulty);
         orderQuestions = generateOrderQuestions(difficulty);
         current = 0;
+        fillScore = 0;
+        orderScore = 0;
+        document.getElementById('difficulty-select').style.display = 'none';
+        document.getElementById('game-area').style.display = '';
+        document.getElementById('game-nav').style.display = '';
         document.getElementById('feedback').textContent = '';
         document.getElementById('next-btn').style.display = 'none';
         showQuestion();
-        // Gombok kiemelése
+        // Highlight selected button
         document.getElementById('btn-easy').style.background = (difficulty === 'easy') ? '#ffb347' : '';
         document.getElementById('btn-hard').style.background = (difficulty === 'hard') ? '#ffb347' : '';
     }
 
-    // Indításkor kiemelés
-    window.onload = () => {
-        document.getElementById('btn-easy').style.background = '#ffb347';
-        showQuestion();
-    };
-
-    let mode = 'fill';
-    let current = 0;
-
-    function setMode(newMode) {
-        mode = newMode;
-        current = 0;
+    function goHome() {
+        document.getElementById('start-area').style.display = '';
+        document.getElementById('mode-select').style.display = 'none';
+        document.getElementById('difficulty-select').style.display = 'none';
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('game-nav').style.display = 'none';
         document.getElementById('feedback').textContent = '';
         document.getElementById('next-btn').style.display = 'none';
-        showQuestion();
     }
+
+    function backToMode() {
+        document.getElementById('difficulty-select').style.display = 'none';
+        document.getElementById('mode-select').style.display = '';
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('game-nav').style.display = 'none';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function backToDifficulty() {
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('game-nav').style.display = 'none';
+        document.getElementById('difficulty-select').style.display = '';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    // On load: only show start
+    window.onload = () => {
+        goHome();
+    };
+
+
 
     function showQuestion() {
         const area = document.getElementById('game-area');
         area.innerHTML = '';
         if (mode === 'fill') {
             const q = fillQuestions[current];
-            // A blank helyén vonal jelenik meg
             const sentence = q.sentence.replace('___', '<span id="blank"></span>');
             area.innerHTML = `<p>${sentence}</p>`;
             q.options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.textContent = opt;
+                btn.className = 'btn btn-outline-primary m-2';
                 btn.onclick = () => checkFillAnswer(opt);
                 area.appendChild(btn);
             });
@@ -223,6 +285,7 @@
             shuffled.forEach(word => {
                 const btn = document.createElement('button');
                 btn.textContent = word;
+                btn.className = 'btn btn-outline-success m-2';
                 btn.onclick = () => pickWord(btn);
                 bank.appendChild(btn);
             });
@@ -237,6 +300,7 @@
         }
     }
 
+    let fillScore = 0;
     function checkFillAnswer(selected) {
         const q = fillQuestions[current];
         const feedback = document.getElementById('feedback');
@@ -244,13 +308,15 @@
             feedback.textContent = 'Correct!';
             feedback.style.color = 'green';
             playSound('correct');
+            fillScore++;
+            document.getElementById('next-btn').style.display = (current < fillQuestions.length - 1) ? 'inline' : 'none';
+            if (current === fillQuestions.length - 1) showFinalScore('fill');
         } else {
             feedback.textContent = 'Try again!';
             feedback.style.color = 'red';
             playSound('wrong');
             return;
         }
-        document.getElementById('next-btn').style.display = (current < fillQuestions.length - 1) ? 'inline' : 'none';
     }
 
     function pickWord(btn) {
@@ -258,9 +324,12 @@
         sentenceDiv.append(btn);
         btn.onclick = null;
         btn.style.margin = '0 4px';
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-warning'); // Change color from green to yellow
         checkOrderAnswer();
     }
 
+    let orderScore = 0;
     function checkOrderAnswer() {
         const sentenceDiv = document.getElementById('sentence');
         const words = Array.from(sentenceDiv.children).map(b => b.textContent);
@@ -272,16 +341,37 @@
                 feedback.textContent = 'Correct!';
                 feedback.style.color = 'green';
                 playSound('correct');
+                orderScore++;
                 document.getElementById('next-btn').style.display = (current < orderQuestions.length - 1) ? 'inline' : 'none';
+                if (current === orderQuestions.length - 1) showFinalScore('order');
             } else {
                 feedback.textContent = 'Try again!';
                 feedback.style.color = 'red';
                 playSound('wrong');
+                // Reset for retry
+                setTimeout(() => {
+                    showQuestion();
+                    feedback.textContent = '';
+                }, 1000);
             }
         } else {
             feedback.textContent = '';
         }
     }
+function showFinalScore(modeType) {
+    let total = modeType === 'fill' ? fillQuestions.length : orderQuestions.length;
+    let score = modeType === 'fill' ? fillScore : orderScore;
+    let feedback = document.getElementById('feedback');
+    let message = `Your score: ${score} / ${total}. `;
+    if (score >= total * 0.8) {
+        message += 'Congratulations!';
+    } else {
+        message += 'Keep practicing!';
+    }
+    feedback.textContent = message;
+    feedback.style.color = score >= total * 0.8 ? 'green' : 'orange';
+    document.getElementById('next-btn').style.display = 'none';
+}
 
     function nextQuestion() {
         current++;
