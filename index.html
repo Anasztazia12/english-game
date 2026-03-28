@@ -256,27 +256,17 @@
         document.getElementById('next-btn').style.display = 'none';
     }
 
-    // On load: only show start
-    window.onload = () => {
-        goHome();
-    };
-
-
-
     function showQuestion() {
         const area = document.getElementById('game-area');
         area.innerHTML = '';
+        const btnColors = ['success', 'danger', 'warning', 'info', 'primary'];
         if (mode === 'fill') {
             const q = fillQuestions[current];
             const sentence = q.sentence.replace('___', '<span id="blank"></span>');
             area.innerHTML = `<p>${sentence}</p>`;
-            let btnColors = ['primary', 'success', 'danger', 'warning', 'info'];
-            // Shuffle colors so each question is different
-            btnColors = btnColors.sort(() => Math.random() - 0.5);
             q.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.textContent = opt;
-                // Assign a unique color to each button
                 btn.className = `btn btn-outline-${btnColors[i % btnColors.length]} m-2`;
                 btn.onclick = () => checkFillAnswer(opt);
                 area.appendChild(btn);
@@ -286,8 +276,6 @@
             const shuffled = [...q.words].sort(() => Math.random() - 0.5);
             area.innerHTML = '<div id="word-bank"></div><div id="sentence"></div>';
             const bank = document.getElementById('word-bank');
-            let btnColors = ['primary', 'success', 'danger', 'warning', 'info'];
-            btnColors = btnColors.sort(() => Math.random() - 0.5);
             shuffled.forEach((word, i) => {
                 const btn = document.createElement('button');
                 btn.textContent = word;
@@ -386,9 +374,9 @@ function showFinalScore(modeType) {
         showQuestion();
     }
 
-    // Indításkor első kérdés
+    // On load: show start screen
     window.onload = () => {
-        showQuestion();
+        goHome();
     };
     </script>
 </body>
