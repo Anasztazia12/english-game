@@ -270,10 +270,14 @@
             const q = fillQuestions[current];
             const sentence = q.sentence.replace('___', '<span id="blank"></span>');
             area.innerHTML = `<p>${sentence}</p>`;
-            q.options.forEach(opt => {
+            let btnColors = ['primary', 'success', 'danger', 'warning', 'info'];
+            // Shuffle colors so each question is different
+            btnColors = btnColors.sort(() => Math.random() - 0.5);
+            q.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.textContent = opt;
-                btn.className = 'btn btn-outline-primary m-2';
+                // Assign a unique color to each button
+                btn.className = `btn btn-outline-${btnColors[i % btnColors.length]} m-2`;
                 btn.onclick = () => checkFillAnswer(opt);
                 area.appendChild(btn);
             });
@@ -282,10 +286,12 @@
             const shuffled = [...q.words].sort(() => Math.random() - 0.5);
             area.innerHTML = '<div id="word-bank"></div><div id="sentence"></div>';
             const bank = document.getElementById('word-bank');
-            shuffled.forEach(word => {
+            let btnColors = ['primary', 'success', 'danger', 'warning', 'info'];
+            btnColors = btnColors.sort(() => Math.random() - 0.5);
+            shuffled.forEach((word, i) => {
                 const btn = document.createElement('button');
                 btn.textContent = word;
-                btn.className = 'btn btn-outline-success m-2';
+                btn.className = `btn btn-outline-${btnColors[i % btnColors.length]} m-2`;
                 btn.onclick = () => pickWord(btn);
                 bank.appendChild(btn);
             });
