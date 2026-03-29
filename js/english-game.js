@@ -11,19 +11,43 @@ function generateOrderQuestions(difficulty) {
         {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
         {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
     ];
+    // Tenses for hard mode
+    const tensesEasy = ["present_simple"];
+    const tensesHard = ["present_simple", "past_simple", "future_simple", "present_continuous", "past_continuous", "future_continuous"];
+    const tenses = (difficulty === 'easy') ? tensesEasy : tensesHard;
     for (let i=0;i<20;i++){
-        let subj, verb, obj;
+        let subj, verb, obj, verbObj, tense;
         let valid = false;
         while (!valid) {
             const combo = combos[Math.floor(Math.random()*combos.length)];
             subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
+            verbObj = verbs.find(v => v.base === combo.verb);
             verb = combo.verb;
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
+            tense = tenses[Math.floor(Math.random()*tenses.length)];
+            // Szűrés: "play the ball" csak We, They, The children
+            if (verb === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
             valid = true;
         }
-        const sentence = `${subj} ${verb} ${obj}.`;
-        const words = sentence.replace('.','').split(' ');
-        questions.push({words, answer:sentence});
+        let sentence = "";
+        if(tense === "present_simple") {
+            const verbForm = (["He","She","Anna","My brother","The dog"].includes(subj) ? verbObj.present[1]:verbObj.present[0]);
+            sentence = `${subj} ${verbForm} ${obj}.`;
+        } else if(tense === "past_simple") {
+            sentence = `${subj} ${verbObj.past} ${obj} yesterday.`;
+        } else if(tense === "future_simple") {
+            sentence = `${subj} will ${verbObj.base} ${obj} tomorrow.`;
+        } else if(tense === "present_continuous") {
+            let be = (["He","She","Anna","My brother","The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
+            sentence = `${subj} ${be} ${verbObj.ing} ${obj} now.`;
+        } else if(tense === "past_continuous") {
+            let was = (["He","She","Anna","My brother","The dog","I"].includes(subj) ? "was" : "were");
+            sentence = `${subj} ${was} ${verbObj.ing} ${obj} yesterday at 5.`;
+        } else if(tense === "future_continuous") {
+            sentence = `${subj} will be ${verbObj.ing} ${obj} tomorrow at 5.`;
+        }
+        const words = sentence.replace('.', '').split(' ');
+        questions.push({words, answer: sentence});
     }
     return questions;
 }
