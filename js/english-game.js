@@ -1,19 +1,23 @@
-// ===================== ORDER KÉRDÉSEK GENERÁLÁSA =====================
+// ===================== Data =====================
+const combos = [
+    {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "go", objs: ["to the park", "to school", "home", "to the garden"]},
+    {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
+    // play (person: music, song, piano; dog: ball, garden, friends)
+    {subj: ["I","You","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "with friends", "in the garden"]},
+    {subj: ["He","She"], verb: "play", objs: ["music", "a song", "the piano"]},
+    {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
+    // play with the ball only: We, They, The children
+    {subj: ["We","They","The children"], verb: "play", objs: ["the ball"]},
+    {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
+    {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "have", objs: ["breakfast", "a book", "homework", "a cake"]},
+    {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
+    {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
+];
+const tensesEasy = ["present_simple"];
+const tensesHard = ["present_simple", "past_simple", "future_simple", "present_continuous", "past_continuous", "future_continuous"];
+
 function generateOrderQuestions(difficulty) {
     let questions = [];
-    const combos = [
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "go", objs: ["to the park", "to school", "home", "to the garden"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "the ball", "with friends", "in the garden"]},
-        {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "have", objs: ["breakfast", "a book", "homework", "a cake"]},
-        {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
-    ];
-    // Tenses for hard mode
-    const tensesEasy = ["present_simple"];
-    const tensesHard = ["present_simple", "past_simple", "future_simple", "present_continuous", "past_continuous", "future_continuous"];
     const tenses = (difficulty === 'easy') ? tensesEasy : tensesHard;
     for (let i=0;i<20;i++){
         let subj, verb, obj, verbObj, tense;
@@ -25,7 +29,7 @@ function generateOrderQuestions(difficulty) {
             verb = combo.verb;
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
             tense = tenses[Math.floor(Math.random()*tenses.length)];
-            // Szűrés: "play the ball" csak We, They, The children
+            // play the ball only: We, They, The children
             if (verb === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
             valid = true;
         }
@@ -52,9 +56,8 @@ function generateOrderQuestions(difficulty) {
     return questions;
 }
 // english-game.js
-// Minden játéklogika és változó ide került át az index.html-ből
 
-// ===================== ADATOK =====================
+// ===================== Data =====================
 const subjects = ["I", "You", "He", "She", "We", "They", "My brother", "The dog", "Anna", "The children"];
 const verbObjects = {
     go: ["to the park", "to school", "home", "to the garden", "to the piano", "with friends", "fast", "well", "every day", "yesterday", "now", "at school", "in the garden", "in the morning"],
@@ -126,82 +129,55 @@ function goHome() {
 function backToMode() { document.getElementById('difficulty-select').style.display='none'; document.getElementById('mode-select').style.display=''; document.getElementById('game-area').style.display='none'; document.getElementById('game-nav').style.display='none'; }
 function backToDifficulty() { document.getElementById('game-area').style.display='none'; document.getElementById('game-nav').style.display='none'; document.getElementById('difficulty-select').style.display=''; }
 
-// ===================== KÉRDÉSEK GENERÁLÁSA =====================
 function generateFillQuestions(difficulty) {
     let questions = [];
-    // Csak értelmes subject-verb-object hármasokat engedünk
-    const combos = [
-        // go
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "go", objs: ["to the park", "to school", "home", "to the garden"]},
-        // eat
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
-        // play (ember: zene, dal, zongora, kutya: labda, kert, barátok)
-        {subj: ["I","You","We","They","Anna","My brother","The children"], verb: "play", objs: ["music", "a song", "the piano", "with friends", "in the garden"]},
-        {subj: ["He","She"], verb: "play", objs: ["music", "a song", "the piano"]},
-        {subj: ["The dog"], verb: "play", objs: ["the ball", "with friends", "in the garden"]},
-        // play the ball csak: We, They, The children
-        {subj: ["We","They","The children"], verb: "play", objs: ["the ball"]},
-        // read
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "read", objs: ["a book", "a letter", "homework"]},
-        // have
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "have", objs: ["breakfast", "a book", "homework", "a cake"]},
-        {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
-        // like
-        {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
-    ];
-    const tenses = ["present_simple", "present_continuous", "past_simple", "past_continuous", "future_simple", "future_continuous"];
+    const tenses = (difficulty === 'easy') ? tensesEasy : tensesHard;
     for (let i=0;i<20;i++){
         let subj, verb, obj, verbObj, tense;
         let valid = false;
         while (!valid) {
             const combo = combos[Math.floor(Math.random()*combos.length)];
             subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
-            verb = verbs.find(v => v.base === combo.verb);
+            verbObj = verbs.find(v => v.base === combo.verb);
+            verb = combo.verb;
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
             tense = tenses[Math.floor(Math.random()*tenses.length)];
-            // Szűrés: "play the ball" csak We, They, The children
-            if (verb.base === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
+            // play the ball only: We, They, The children
+            if (verb === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
             valid = true;
         }
         let answer, sentence;
-        // Egyszerű jelen
         if(tense==="present_simple"){
-            answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verb.present[1]:verb.present[0]);
+            answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verbObj.present[1]:verbObj.present[0]);
             sentence = `${subj} <span class='blank-line'></span> ${obj}.`;
         }
-        // Folyamatos jelen
         else if(tense==="present_continuous"){
             let be = (["He","She","Anna","My brother","The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
-            answer = be + " " + verb.ing;
+            answer = be + " " + verbObj.ing;
             sentence = `${subj} <span class='blank-line'></span> ${obj} now.`;
         }
-        // Egyszerű múlt
         else if(tense==="past_simple"){
-            answer = verb.past;
+            answer = verbObj.past;
             sentence = `${subj} <span class='blank-line'></span> ${obj} yesterday.`;
         }
-        // Folyamatos múlt
         else if(tense==="past_continuous"){
             let was = (["He","She","Anna","My brother","The dog","I"].includes(subj) ? "was" : "were");
-            answer = was + " " + verb.ing;
+            answer = was + " " + verbObj.ing;
             sentence = `${subj} <span class='blank-line'></span> ${obj} yesterday at 5.`;
         }
-        // Egyszerű jövő
         else if(tense==="future_simple"){
-            answer = "will " + verb.base;
+            answer = "will " + verbObj.base;
             sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow.`;
         }
-        // Folyamatos jövő
         else if(tense==="future_continuous"){
-            answer = "will be " + verb.ing;
+            answer = "will be " + verbObj.ing;
             sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow at 5.`;
         }
         const options = new Set([answer]);
         while(options.size<3){
-            const forms = [verb.base, verb.past, verb.ing, verb.present[0], verb.present[1], "will "+verb.base, "will be "+verb.ing];
-            // Folyamatosakhoz be/was/were nélkül is lehet zavaró opció
+            const forms = [verbObj.base, verbObj.past, verbObj.ing, verbObj.present[0], verbObj.present[1], "will "+verbObj.base, "will be "+verbObj.ing];
             if(tense==="present_continuous" || tense==="past_continuous" || tense==="future_continuous") {
-                forms.push(verb.ing);
+                forms.push(verbObj.ing);
             }
             options.add(forms[Math.floor(Math.random()*forms.length)]);
         }
@@ -210,12 +186,12 @@ function generateFillQuestions(difficulty) {
     return questions;
 }
 
-// ===================== MEGJELENÍTÉS =====================
+// ===================== DISPLAY =====================
 function showQuestion(){
     const area = document.getElementById('game-area');
     area.innerHTML='';
     const btnColors = [...colors].sort(()=>Math.random()-0.5);
-    // Kérdésszámláló
+    // Question counter
     let total = (mode==='fill') ? fillQuestions.length : orderQuestions.length;
     area.innerHTML += `<div style="font-weight:bold; margin-bottom:10px;">Question ${current+1} / ${total}</div>`;
 

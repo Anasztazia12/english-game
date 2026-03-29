@@ -1,5 +1,4 @@
-
-/* háttér */
+/* background */
 body {
     text-align: center;
     padding: 40px;
@@ -8,24 +7,24 @@ body {
 }
 
 
-/* cím */
+/* title */
 h1 {
     font-weight: bold;
     margin-bottom: 30px;
 }
 
-/* játék terület */
+/* game area */
 #game-area {
     margin-top: 20px;
 }
 
-/* gombok alap (Bootstrap kiegészítés, csak minimális extra) */
+/* button base (Bootstrap extension, minimal extra) */
 #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Egységes Back és Home gomb stílus, csak ha szükséges */
+/* Unified Back and Home button style, only if needed */
 .btn-back, .btn-home {
     font-weight: bold;
     color: black;
@@ -41,18 +40,18 @@ h1 {
     vertical-align: middle;
 }
 
-/* hover effekt */
+/* hover effect */
 #game-area button:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 14px rgba(0,0,0,0.15);
 }
 
-/* kattintás */
+/* click effect */
 #game-area button:active {
     transform: scale(0.95);
 }
 
-/* start gomb */
+/* start button */
 #start-area button {
     border-radius: 20px;
     padding: 12px 30px;
@@ -60,24 +59,24 @@ h1 {
     font-weight: bold;
 }
 
-/* feedback szöveg */
+/* feedback text */
 #feedback {
     font-size: 1.6rem;
     font-weight: bold;
     margin-top: 20px;
 }
 
-/* correct / wrong színek */
+/* correct / wrong colors */
 .correct { color: green; }
 .wrong { color: red; }
 
-/* pontszám */
+/* score */
 #game-area h3 {
     margin-top: 20px;
     font-weight: bold;
 }
 
-/* kis animáció és téglalap keret a teljes oldalnak */
+/* small animation and rectangle border for the whole page */
 .container {
     animation: fadeIn 0.4s ease;
     background: #f0eeee;
@@ -89,6 +88,7 @@ h1 {
     margin: 40px auto;
 }
 
+/* responsive design */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px);}
     to { opacity: 1; transform: translateY(0);}
@@ -114,7 +114,6 @@ h1 {
     from { opacity: 0; transform: translateY(10px);}
     to { opacity: 1; transform: translateY(0);}
 }
-
 
 @media (max-width: 600px) {
     .container {
