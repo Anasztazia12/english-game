@@ -245,12 +245,23 @@ function checkFillAnswer(selected){
 }
 
 function pickWord(btn){
-    const sentenceDiv=document.getElementById('sentence');
-    sentenceDiv.append(btn);
-    btn.onclick=null;
-    btn.style.margin='0 4px';
-    btn.classList.remove('btn-outline-success');
-    btn.classList.add('btn-warning');
+    const sentenceDiv = document.getElementById('sentence');
+    const bank = document.getElementById('word-bank');
+    // If the button is in the word bank, move to sentence
+    if (btn.parentElement === bank) {
+        sentenceDiv.append(btn);
+        btn.onclick = () => pickWord(btn); // allow toggling
+        btn.style.margin = '0 4px';
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-warning');
+    } else {
+        // If the button is in the sentence, move back to word bank
+        bank.append(btn);
+        btn.onclick = () => pickWord(btn);
+        btn.style.margin = '';
+        btn.classList.remove('btn-warning');
+        btn.classList.add('btn-outline-success');
+    }
     checkOrderAnswer();
 }
 
