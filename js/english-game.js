@@ -47,44 +47,79 @@ const combos = [
     {subj: ["The dog"], verb: "have", objs: ["a ball", "friends"]},
     {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "like", objs: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "the park", "friends"]}
 ];
-const tensesEasy = ["present_simple"];
-const tensesHard = ["present_simple", "past_simple", "future_simple", "present_continuous", "past_continuous", "future_continuous"];
+// easy: csak egyszerű igeidők
+const tensesEasy = ["present_simple", "past_simple", "future_simple"];
+// medium: easy + folyamatos igeidők + mindkét jövő (will, going_to)
+const tensesMedium = [
+    "present_simple", "past_simple", "future_simple",
+    "present_continuous", "past_continuous", "future_continuous",
+    "going_to", "will"
+];
+// hard: mind a 12 angol igeidő
+const tensesHard = [
+    "present_simple", "past_simple", "future_simple",
+    "present_continuous", "past_continuous", "future_continuous",
+    "present_perfect", "past_perfect", "future_perfect",
+    "present_perfect_continuous", "past_perfect_continuous", "future_perfect_continuous",
+    "going_to", "will"
+];
 
 function generateOrderQuestions(difficulty) {
     let questions = [];
-    const tenses = (difficulty === 'easy') ? tensesEasy : tensesHard;
-    for (let i=0;i<20;i++){
+    let tenses;
+    if (difficulty === 'easy') tenses = tensesEasy;
+    else if (difficulty === 'medium') tenses = tensesMedium;
+    else tenses = tensesHard;
+    for (let i = 0; i < 20; i++) {
         let subj, verb, obj, verbObj, tense;
         let valid = false;
         while (!valid) {
-            const combo = combos[Math.floor(Math.random()*combos.length)];
-            subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
+            const combo = combos[Math.floor(Math.random() * combos.length)];
+            subj = combo.subj[Math.floor(Math.random() * combo.subj.length)];
             verbObj = verbs.find(v => v.base === combo.verb);
             verb = combo.verb;
-            obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
-            tense = tenses[Math.floor(Math.random()*tenses.length)];
+            obj = combo.objs[Math.floor(Math.random() * combo.objs.length)];
+            tense = tenses[Math.floor(Math.random() * tenses.length)];
             if (!isValidSentence(subj, verb, obj)) continue;
             valid = true;
         }
         let sentence = "";
-        if(tense === "present_simple") {
-            const verbForm = (["He","She","Anna","My brother","The dog"].includes(subj) ? verbObj.present[1]:verbObj.present[0]);
+        if (tense === "present_simple") {
+            const verbForm = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? verbObj.present[1] : verbObj.present[0]);
             sentence = `${subj} ${verbForm} ${obj}.`;
-        } else if(tense === "past_simple") {
+        } else if (tense === "past_simple") {
             sentence = `${subj} ${verbObj.past} ${obj} yesterday.`;
-        } else if(tense === "future_simple") {
+        } else if (tense === "future_simple") {
             sentence = `${subj} will ${verbObj.base} ${obj} tomorrow.`;
-        } else if(tense === "present_continuous") {
-            let be = (["He","She","Anna","My brother","The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
+        } else if (tense === "present_continuous") {
+            let be = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
             sentence = `${subj} ${be} ${verbObj.ing} ${obj} now.`;
-        } else if(tense === "past_continuous") {
-            let was = (["He","She","Anna","My brother","The dog","I"].includes(subj) ? "was" : "were");
+        } else if (tense === "past_continuous") {
+            let was = (["He", "She", "Anna", "My brother", "The dog", "I"].includes(subj) ? "was" : "were");
             sentence = `${subj} ${was} ${verbObj.ing} ${obj} yesterday at 5.`;
-        } else if(tense === "future_continuous") {
+        } else if (tense === "future_continuous") {
             sentence = `${subj} will be ${verbObj.ing} ${obj} tomorrow at 5.`;
+        } else if (tense === "present_perfect") {
+            sentence = `${subj} have${["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "s" : ""} ${verbObj.past} ${obj} today.`;
+        } else if (tense === "past_perfect") {
+            sentence = `${subj} had ${verbObj.past} ${obj} before.`;
+        } else if (tense === "future_perfect") {
+            sentence = `${subj} will have ${verbObj.past} ${obj} by tomorrow.`;
+        } else if (tense === "present_perfect_continuous") {
+            let have = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "has" : "have");
+            sentence = `${subj} ${have} been ${verbObj.ing} ${obj} for an hour.`;
+        } else if (tense === "past_perfect_continuous") {
+            sentence = `${subj} had been ${verbObj.ing} ${obj} before 6.`;
+        } else if (tense === "future_perfect_continuous") {
+            sentence = `${subj} will have been ${verbObj.ing} ${obj} for two hours by tomorrow.`;
+        } else if (tense === "going_to") {
+            let be = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
+            sentence = `${subj} ${be} going to ${verbObj.base} ${obj} tomorrow.`;
+        } else if (tense === "will") {
+            sentence = `${subj} will ${verbObj.base} ${obj} tomorrow.`;
         }
         const words = sentence.replace('.', '').split(' ');
-        questions.push({words, answer: sentence});
+        questions.push({ words, answer: sentence });
     }
     return questions;
 }
@@ -164,56 +199,90 @@ function backToDifficulty() { document.getElementById('game-area').style.display
 
 function generateFillQuestions(difficulty) {
     let questions = [];
-    const tenses = (difficulty === 'easy') ? tensesEasy : tensesHard;
-    for (let i=0;i<20;i++){
+    let tenses;
+    if (difficulty === 'easy') tenses = tensesEasy;
+    else if (difficulty === 'medium') tenses = tensesMedium;
+    else tenses = tensesHard;
+    for (let i = 0; i < 20; i++) {
         let subj, verb, obj, verbObj, tense;
         let valid = false;
         while (!valid) {
-            const combo = combos[Math.floor(Math.random()*combos.length)];
-            subj = combo.subj[Math.floor(Math.random()*combo.subj.length)];
+            const combo = combos[Math.floor(Math.random() * combos.length)];
+            subj = combo.subj[Math.floor(Math.random() * combo.subj.length)];
             verbObj = verbs.find(v => v.base === combo.verb);
             verb = combo.verb;
-            obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
-            tense = tenses[Math.floor(Math.random()*tenses.length)];
+            obj = combo.objs[Math.floor(Math.random() * combo.objs.length)];
+            tense = tenses[Math.floor(Math.random() * tenses.length)];
             if (!isValidSentence(subj, verb, obj)) continue;
             valid = true;
         }
         let answer, sentence;
-        if(tense==="present_simple"){
-            answer = (["He","She","Anna","My brother","The dog"].includes(subj) ? verbObj.present[1]:verbObj.present[0]);
+        if (tense === "present_simple") {
+            answer = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? verbObj.present[1] : verbObj.present[0]);
             sentence = `${subj} <span class='blank-line'></span> ${obj}.`;
-        }
-        else if(tense==="present_continuous"){
-            let be = (["He","She","Anna","My brother","The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
+        } else if (tense === "present_continuous") {
+            let be = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
             answer = be + " " + verbObj.ing;
             sentence = `${subj} <span class='blank-line'></span> ${obj} now.`;
-        }
-        else if(tense==="past_simple"){
+        } else if (tense === "past_simple") {
             answer = verbObj.past;
             sentence = `${subj} <span class='blank-line'></span> ${obj} yesterday.`;
-        }
-        else if(tense==="past_continuous"){
-            let was = (["He","She","Anna","My brother","The dog","I"].includes(subj) ? "was" : "were");
+        } else if (tense === "past_continuous") {
+            let was = (["He", "She", "Anna", "My brother", "The dog", "I"].includes(subj) ? "was" : "were");
             answer = was + " " + verbObj.ing;
             sentence = `${subj} <span class='blank-line'></span> ${obj} yesterday at 5.`;
-        }
-        else if(tense==="future_simple"){
+        } else if (tense === "future_simple") {
+            answer = "will " + verbObj.base;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow.`;
+        } else if (tense === "future_continuous") {
+            answer = "will be " + verbObj.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow at 5.`;
+        } else if (tense === "present_perfect") {
+            answer = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "has" : "have") + " " + verbObj.past;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} today.`;
+        } else if (tense === "past_perfect") {
+            answer = "had " + verbObj.past;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} before.`;
+        } else if (tense === "future_perfect") {
+            answer = "will have " + verbObj.past;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} by tomorrow.`;
+        } else if (tense === "present_perfect_continuous") {
+            let have = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "has" : "have");
+            answer = have + " been " + verbObj.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} for an hour.`;
+        } else if (tense === "past_perfect_continuous") {
+            answer = "had been " + verbObj.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} before 6.`;
+        } else if (tense === "future_perfect_continuous") {
+            answer = "will have been " + verbObj.ing;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} for two hours by tomorrow.`;
+        } else if (tense === "going_to") {
+            let be = (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are"));
+            answer = be + " going to " + verbObj.base;
+            sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow.`;
+        } else if (tense === "will") {
             answer = "will " + verbObj.base;
             sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow.`;
         }
-        else if(tense==="future_continuous"){
-            answer = "will be " + verbObj.ing;
-            sentence = `${subj} <span class='blank-line'></span> ${obj} tomorrow at 5.`;
-        }
         const options = new Set([answer]);
-        while(options.size<3){
-            const forms = [verbObj.base, verbObj.past, verbObj.ing, verbObj.present[0], verbObj.present[1], "will "+verbObj.base, "will be "+verbObj.ing];
-            if(tense==="present_continuous" || tense==="past_continuous" || tense==="future_continuous") {
+        while (options.size < 3) {
+            const forms = [
+                verbObj.base, verbObj.past, verbObj.ing, verbObj.present[0], verbObj.present[1],
+                "will " + verbObj.base, "will be " + verbObj.ing,
+                (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "is" : (["I"].includes(subj) ? "am" : "are")) + " going to " + verbObj.base,
+                (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "has" : "have") + " " + verbObj.past,
+                "had " + verbObj.past,
+                "will have " + verbObj.past,
+                (["He", "She", "Anna", "My brother", "The dog"].includes(subj) ? "has" : "have") + " been " + verbObj.ing,
+                "had been " + verbObj.ing,
+                "will have been " + verbObj.ing
+            ];
+            if (["present_continuous", "past_continuous", "future_continuous", "present_perfect_continuous", "past_perfect_continuous", "future_perfect_continuous"].includes(tense)) {
                 forms.push(verbObj.ing);
             }
-            options.add(forms[Math.floor(Math.random()*forms.length)]);
+            options.add(forms[Math.floor(Math.random() * forms.length)]);
         }
-        questions.push({sentence, options:Array.from(options), answer});
+        questions.push({ sentence, options: Array.from(options), answer });
     }
     return questions;
 }
