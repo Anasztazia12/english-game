@@ -422,10 +422,17 @@ function showFinalScore(modeType){
     } else {
         message += 'Try again!';
     }
-    // List correct answers
+    // List correct answers (full sentences)
     let answers = '';
     if(modeType==='fill'){
-        answers = `<div class='answers-list'>` + fillQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>') + `</div>`;
+        answers = `<div class='answers-list'>` + fillQuestions.map((q,i)=>{
+            // reconstruct full sentence for fill mode
+            let s = q.sentence;
+            // replace blank with the correct answer
+            s = s.replace("<span class='blank-line'></span>", `<b>${q.answer}</b>`);
+            // ha marad html tag, azt ne jelenítse meg szó szerint
+            return `${i+1}. ${s}`;
+        }).join('<br>') + `</div>`;
     } else {
         answers = `<div class='answers-list'>` + orderQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>') + `</div>`;
     }
