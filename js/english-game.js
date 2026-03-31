@@ -100,7 +100,7 @@ const verbObjects = {
     have: ["breakfast", "a book", "homework", "a cake", "a letter", "music", "a song", "the ball", "the piano", "friends"],
     like: ["music", "a book", "breakfast", "a song", "the ball", "the piano", "a letter", "the park", "friends", "playing", "reading", "eating", "going"]
 };
-const objects = Array.from(new Set(Object.values(verbObjects).flat()));
+// const objects = Array.from(new Set(Object.values(verbObjects).flat())); // unused, removed
 const verbs = [
     { base: "go", present: ["go","goes"], ing:"going", past:"went" },
     { base: "eat", present:["eat","eats"], ing:"eating", past:"ate" },
@@ -253,7 +253,10 @@ function showQuestion(){
     }
 }
 
+let answerLocked = false;
 function checkFillAnswer(selected){
+    if(answerLocked) return;
+    answerLocked = true;
     const q = fillQuestions[current];
     const feedback = document.getElementById('feedback');
     if(selected===q.answer){
@@ -263,17 +266,21 @@ function checkFillAnswer(selected){
             fillScore++;
             q.answeredCorrectly = true;
         }
+    } else {
+        feedback.textContent='Wrong!';
+        feedback.style.color='red';
+    }
+    // Always go to next after 2s
+    setTimeout(()=>{
         if(current < fillQuestions.length-1){
-            document.getElementById('next-btn').style.display='inline';
+            current++;
+            feedback.textContent='';
+            answerLocked = false;
+            showQuestion();
         } else {
-            document.getElementById('next-btn').style.display='none';
             showFinalScore('fill');
         }
-    } else {
-        feedback.textContent='Try again!';
-        feedback.style.color='red';
-        return;
-    }
+    }, 2000);
 }
 
 function pickWord(btn){
@@ -297,12 +304,15 @@ function pickWord(btn){
     checkOrderAnswer();
 }
 
+let orderAnswerLocked = false;
 function checkOrderAnswer(){
+    if(orderAnswerLocked) return;
     const sentenceDiv=document.getElementById('sentence');
     const words=Array.from(sentenceDiv.children).map(b=>b.textContent);
     const q=orderQuestions[current];
     const feedback=document.getElementById('feedback');
     if(words.length===q.words.length){
+        orderAnswerLocked = true;
         const userSentence=words.join(' ') + '.';
         if(userSentence===q.answer){
             feedback.textContent='Correct!';
@@ -311,17 +321,20 @@ function checkOrderAnswer(){
                 orderScore++;
                 q.answeredCorrectly = true;
             }
+        } else {
+            feedback.textContent='Wrong!';
+            feedback.style.color='red';
+        }
+        setTimeout(()=>{
             if(current < orderQuestions.length-1){
-                document.getElementById('next-btn').style.display='inline';
+                current++;
+                feedback.textContent='';
+                orderAnswerLocked = false;
+                showQuestion();
             } else {
-                document.getElementById('next-btn').style.display='none';
                 showFinalScore('order');
             }
-        } else {
-            feedback.textContent='Try again!';
-            feedback.style.color='red';
-            setTimeout(()=>{ showQuestion(); feedback.textContent=''; },1000);
-        }
+        }, 2000);
     } else { feedback.textContent=''; }
 }
 
@@ -339,14 +352,17 @@ function showFinalScore(modeType){
     } else {
         message += 'Try again!';
     }
-    feedback.textContent = message;
+    // List correct answers
+    let answers = '';
+    if(modeType==='fill'){
+        answers = '<br><br>Correct answers:<br>' + fillQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>');
+    } else {
+        answers = '<br><br>Correct answers:<br>' + orderQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>');
+    }
+    feedback.innerHTML = message + answers;
     document.getElementById('next-btn').style.display='none';
 }
 
 function nextQuestion(){
-    if(current < 19){
-        current++;
-        document.getElementById('feedback').textContent='';
-        showQuestion();
-    }
+    // Not used anymore, auto-advance is implemented
 }
