@@ -83,7 +83,7 @@ h1 {
 
 /* word buttons: add border for white buttons */
 #game-area button.btn.btn-light {
-    border: 2px solid #888;
+    border: 2px solid #000;
     background: #fff;
     color: #222;
 }
