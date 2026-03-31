@@ -1,4 +1,38 @@
 // ===================== Data =====================
+
+// Szűrő logika: csak értelmes subject-verb-object kombinációk engedélyezése
+function isValidSentence(subj, verb, obj) {
+    // "The dog" csak "play" vagy "have" igével és "the ball" vagy "friends" tárggyal
+    if (subj === "The dog") {
+        if (["play", "have"].includes(verb)) {
+            if (["the ball", "friends"].includes(obj)) return true;
+            // "The dog" játszhat "with friends", "in the garden"
+            if (verb === "play" && ["with friends", "in the garden"].includes(obj)) return true;
+        }
+        return false;
+    }
+    // "The children" nem "eat" vagy "have" "the ball"
+    if (["The children", "Anna", "My brother", "He", "She"].includes(subj)) {
+        if (["the ball", "friends"].includes(obj) && ["eat"].includes(verb)) return false;
+    }
+    // "Anna", "My brother", "He", "She" nem "eat" "the ball" vagy "friends"
+    if (["Anna", "My brother", "He", "She"].includes(subj) && verb === "eat" && ["the ball", "friends"].includes(obj)) return false;
+    // "I", "You", "We", "They" nem "eat" "the ball"
+    if (["I", "You", "We", "They"].includes(subj) && verb === "eat" && obj === "the ball") return false;
+    // "read" csak "a book", "a letter", "homework"
+    if (verb === "read" && !["a book", "a letter", "homework"].includes(obj)) return false;
+    // "play the ball" csak "We", "They", "The children"
+    if (verb === "play" && obj === "the ball" && !["We", "They", "The children", "The dog"].includes(subj)) return false;
+    // "eat" csak "a cake", "breakfast"
+    if (verb === "eat" && !["a cake", "breakfast"].includes(obj)) return false;
+    // "have" nem "music", "a song", "the piano"
+    if (verb === "have" && ["music", "a song", "the piano"].includes(obj)) return false;
+    // "go" nem "music", "a song", "the piano", "the ball"
+    if (verb === "go" && ["music", "a song", "the piano", "the ball"].includes(obj)) return false;
+    // "like" bármit, de "the ball" csak ha nem "eat"
+    // Egyébként engedjük át
+    return true;
+}
 const combos = [
     {subj: ["I","You","He","She","We","They","Anna","My brother","The children"], verb: "go", objs: ["to the park", "to school", "home", "to the garden"]},
     {subj: ["I","You","He","She","We","They","Anna","My brother","The dog"], verb: "eat", objs: ["a cake", "breakfast"]},
@@ -29,8 +63,7 @@ function generateOrderQuestions(difficulty) {
             verb = combo.verb;
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
             tense = tenses[Math.floor(Math.random()*tenses.length)];
-            // play the ball only: We, They, The children
-            if (verb === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
+            if (!isValidSentence(subj, verb, obj)) continue;
             valid = true;
         }
         let sentence = "";
@@ -142,8 +175,7 @@ function generateFillQuestions(difficulty) {
             verb = combo.verb;
             obj = combo.objs[Math.floor(Math.random()*combo.objs.length)];
             tense = tenses[Math.floor(Math.random()*tenses.length)];
-            // play the ball only: We, They, The children
-            if (verb === "play" && obj === "the ball" && !["We","They","The children"].includes(subj)) continue;
+            if (!isValidSentence(subj, verb, obj)) continue;
             valid = true;
         }
         let answer, sentence;
