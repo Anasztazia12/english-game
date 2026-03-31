@@ -261,20 +261,20 @@ function checkFillAnswer(selected){
     const feedback = document.getElementById('feedback');
     if(selected===q.answer){
         feedback.textContent='Correct!';
-        feedback.style.color='green';
+        feedback.className = 'correct';
         if(!q.answeredCorrectly) {
             fillScore++;
             q.answeredCorrectly = true;
         }
     } else {
         feedback.textContent='Wrong!';
-        feedback.style.color='red';
+        feedback.className = 'wrong';
     }
-    // Always go to next after 2s
     setTimeout(()=>{
         if(current < fillQuestions.length-1){
             current++;
             feedback.textContent='';
+            feedback.className = '';
             answerLocked = false;
             showQuestion();
         } else {
@@ -316,33 +316,34 @@ function checkOrderAnswer(){
         const userSentence=words.join(' ') + '.';
         if(userSentence===q.answer){
             feedback.textContent='Correct!';
-            feedback.style.color='green';
+            feedback.className = 'correct';
             if(!q.answeredCorrectly) {
                 orderScore++;
                 q.answeredCorrectly = true;
             }
         } else {
             feedback.textContent='Wrong!';
-            feedback.style.color='red';
+            feedback.className = 'wrong';
         }
         setTimeout(()=>{
             if(current < orderQuestions.length-1){
                 current++;
                 feedback.textContent='';
+                feedback.className = '';
                 orderAnswerLocked = false;
                 showQuestion();
             } else {
                 showFinalScore('order');
             }
         }, 2000);
-    } else { feedback.textContent=''; }
+    } else { feedback.textContent=''; feedback.className = ''; }
 }
 
 function showFinalScore(modeType){
     const total = (modeType==='fill')?fillQuestions.length:orderQuestions.length;
     const score = (modeType==='fill')?fillScore:orderScore;
     const feedback = document.getElementById('feedback');
-    let message = `Your score: ${score} / ${total}. `;
+    let message = `<span class='score'>Your score: ${score} / ${total}.</span> `;
     if(score >= 17){
         message += 'Congratulations!';
     } else if(score >= 13){
@@ -355,11 +356,12 @@ function showFinalScore(modeType){
     // List correct answers
     let answers = '';
     if(modeType==='fill'){
-        answers = '<br><br>Correct answers:<br>' + fillQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>');
+        answers = `<div class='answers-list'>` + fillQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>') + `</div>`;
     } else {
-        answers = '<br><br>Correct answers:<br>' + orderQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>');
+        answers = `<div class='answers-list'>` + orderQuestions.map((q,i)=>`${i+1}. ${q.answer}`).join('<br>') + `</div>`;
     }
     feedback.innerHTML = message + answers;
+    feedback.className = '';
     document.getElementById('next-btn').style.display='none';
 }
 

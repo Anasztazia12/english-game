@@ -66,6 +66,28 @@ h1 {
     margin-top: 20px;
 }
 
+/* score color */
+#feedback .score {
+    color: green;
+}
+
+/* correct answers at end: black, justified */
+#feedback .answers-list {
+    color: black;
+    text-align: justify;
+    margin-top: 18px;
+    font-weight: normal;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* word buttons: add border for white buttons */
+#game-area button.btn.btn-light {
+    border: 2px solid #888;
+    background: #fff;
+    color: #222;
+}
+
 /* correct / wrong colors */
 .correct { color: green; }
 .wrong { color: red; }
