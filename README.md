@@ -50,6 +50,12 @@ An interactive web-based game for practicing English sentences, designed for chi
 
 - Modern web browser (Chrome, Firefox, Edge, Safari, etc.)
 
+## Screenshot
+
+Mobile view shown in browser DevTools:
+
+![Mobile view in DevTools](assets/pictures/screenshot.png)
+
 ---
 
 ## UX 5 Plan (Jesse James Garrett model)
