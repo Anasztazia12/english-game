@@ -1,16 +1,65 @@
+/* ===================== Kid-friendly game style ===================== */
+
+:root {
+    --sunny: #FFC800;
+    --grass: #58CC02;
+    --sky: #1CB0F6;
+    --berry: #FF4B6E;
+    --grape: #A560F5;
+    --ink: #3C3C3C;
+}
+
 /* background */
 body {
     text-align: center;
-    padding: 40px;
-    background: linear-gradient(135deg, #d7d8da, #879be9);
-    font-family: Arial, sans-serif;
+    padding: 40px 16px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFDE59 0%, #FF914D 30%, #FF5C8A 60%, #A560F5 85%, #4FC3F7 100%);
+    background-attachment: fixed;
+    font-family: 'Nunito', 'Baloo 2', Arial, sans-serif;
+    color: var(--ink);
 }
-
 
 /* title */
 h1 {
-    font-weight: bold;
-    margin-bottom: 30px;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 2.4rem;
+    margin-bottom: 24px;
+    color: var(--berry);
+    -webkit-text-stroke: 1.5px #fff;
+    text-shadow: 0 3px 0 #fff, 0 6px 12px rgba(0,0,0,0.15);
+    animation: titleBounce 2.4s ease-in-out infinite;
+}
+
+h2 {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 700;
+    color: var(--grape);
+    margin-bottom: 18px;
+}
+
+@keyframes titleBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(-1deg); }
+}
+
+/* the card */
+.container {
+    animation: popIn 0.5s cubic-bezier(.26,1.6,.5,1);
+    background: #FFFDF7;
+    border: 4px solid var(--sunny);
+    border-radius: 28px;
+    box-shadow: 0 10px 0 rgba(0,0,0,0.08), 0 16px 32px rgba(0,0,0,0.18);
+    padding: 32px 24px 32px 24px;
+    max-width: 600px;
+    margin: 40px auto;
+    position: relative;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* game area */
@@ -18,79 +67,140 @@ h1 {
     margin-top: 20px;
 }
 
-/* button base (Bootstrap extension, minimal extra) */
-#game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* button base: chunky "gummy" game buttons */
+#game-area button, #start-area button, #tense-select button, #difficulty-select button,
+#text-area button, #game-nav button, #final-actions button, #next-btn {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border: none !important;
+    border-radius: 18px;
+    padding: 12px 22px;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.12);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-/* Unified Back and Home button style, only if needed */
+/* Unified Back and Home button style */
 .btn-back, .btn-home {
-    font-weight: bold;
-    color: black;
+    font-weight: 700;
+    background: #fff !important;
+    border: 3px solid var(--sky) !important;
+    color: var(--sky) !important;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1) !important;
+}
+.btn-back { border-color: var(--sunny) !important; color: #C98A00 !important; }
+
+/* reading text before practice: looks like a little storybook page */
+#reading-text {
+    text-align: left;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    background: #FFF9E6;
+    border: 3px dashed var(--sunny);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+}
+#reading-text::before {
+    content: "📖 ";
 }
 
 /* fill in the blank line */
 .blank-line {
     display: inline-block;
-    border-bottom: 2.5px solid #888;
+    border-bottom: 3px solid var(--grape);
     min-width: 60px;
     height: 1.2em;
     margin: 0 4px;
     vertical-align: middle;
 }
 
-/* hover effect */
-#game-area button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+/* hover effect: button "lifts up" */
+#game-area button:hover, #start-area button:hover, #tense-select button:hover,
+#difficulty-select button:hover, #text-area button:hover, #final-actions button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 10px 16px rgba(0,0,0,0.16);
 }
 
-/* click effect */
-#game-area button:active {
-    transform: scale(0.95);
+/* click effect: button "presses in" */
+#game-area button:active, #start-area button:active, #tense-select button:active,
+#difficulty-select button:active, #text-area button:active, #final-actions button:active {
+    transform: translateY(3px) scale(0.98);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.12);
 }
 
-/* start button */
+/* start button: extra big and playful */
 #start-area button {
-    border-radius: 20px;
-    padding: 12px 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    border-radius: 24px;
+    padding: 18px 40px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 }
 
 /* feedback text */
 #feedback {
-    font-size: 1.6rem;
-    font-weight: bold;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
     margin-top: 20px;
 }
 
 /* score color */
 #feedback .score {
-    color: green;
+    color: var(--grass);
+    display: inline-block;
 }
 
-/* correct answers at end: black, justified */
+/* stars on the final score */
+#feedback .stars {
+    display: block;
+    font-size: 2.2rem;
+    letter-spacing: 6px;
+    margin: 6px 0 4px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+}
+
+/* correct answers at end: readable, playful list */
 #feedback .answers-list {
-    color: black;
-    text-align: justify;
+    color: var(--ink);
+    text-align: left;
     margin-top: 18px;
-    font-weight: normal;
-    font-size: 1.1rem;
-    line-height: 1.5;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    background: #F4F1FF;
+    border-radius: 14px;
+    padding: 14px 18px;
 }
 
 /* word buttons: add border for white buttons */
 #game-area button.btn.btn-light {
-    border: 2px solid #000;
+    border: 3px solid var(--ink) !important;
     background: #fff;
     color: #222;
 }
 
-/* correct / wrong colors */
-.correct { color: green; }
-.wrong { color: red; }
+/* correct / wrong colors + pop animation */
+.correct, .wrong {
+    display: inline-block;
+    animation: pop 0.35s cubic-bezier(.26,1.6,.5,1);
+}
+.correct { color: var(--grass); }
+.wrong { color: var(--berry); animation: shake 0.4s ease; }
+
+@keyframes pop {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
 
 /* score */
 #game-area h3 {
@@ -98,58 +208,44 @@ h1 {
     font-weight: bold;
 }
 
-/* small animation and rectangle border for the whole page */
-.container {
-    animation: fadeIn 0.4s ease;
-    background: #f0eeee;
-    border: 3px solid #a1a0a0;
-    border-radius: 18px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
-    padding: 32px 24px 32px 24px;
-    max-width: 600px;
-    margin: 40px auto;
-}
-
-/* responsive design */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px);}
-    to { opacity: 1; transform: translateY(0);}
+/* question header inside game area */
+#game-area > div:first-child {
+    font-family: 'Baloo 2', sans-serif;
+    color: var(--grape);
 }
 
 @media (max-width: 600px) {
+    body {
+        padding: 16px 10px;
+    }
     .container {
         max-width: 98vw;
         padding: 16px 4vw 16px 4vw;
-        border-radius: 12px;
+        border-radius: 20px;
         font-size: 0.98em;
+        margin: 8px auto;
     }
-    h1, h2 {
-        font-size: 1.2em;
-    }
-    #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
+    h1 { font-size: 1.5em; margin-bottom: 14px; }
+    h2 { font-size: 1.15em; }
+    #start-area button { font-size: 1.2rem; padding: 14px 26px; }
+    #game-area button, #start-area button, #tense-select button, #difficulty-select button,
+    #text-area button, #game-nav button, #final-actions button, #next-btn {
         min-width: 90px;
         font-size: 0.95em;
-        padding: 8px 10px;
+        padding: 10px 14px;
     }
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px);}
-    to { opacity: 1; transform: translateY(0);}
-}
-
-@media (max-width: 600px) {
-    .container {
-        max-width: 98vw;
-        padding: 16px 4vw 16px 4vw;
-        border-radius: 12px;
-        font-size: 0.98em;
+    #reading-text {
+        font-size: 1.02rem;
+        padding: 12px 14px;
     }
-    h1, h2 {
-        font-size: 1.2em;
+    #feedback {
+        font-size: 1.3rem;
     }
-    #game-area button, #start-area button, #mode-select button, #difficulty-select button, #game-nav button, #next-btn {
-        min-width: 90px;
-        font-size: 0.95em;
-        padding: 8px 10px;
+    #feedback .stars {
+        font-size: 1.8rem;
+    }
+    #feedback .answers-list {
+        font-size: 0.92rem;
+        padding: 10px 12px;
     }
 }
