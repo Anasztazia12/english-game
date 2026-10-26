@@ -13,6 +13,22 @@ function isValidSentence(subj, verb, obj, tense) {
         if (verb === "like") return false;
         if (verb === "have" && !["breakfast", "a cake"].includes(obj)) return false;
     }
+    // "like" csak jelen időben természetes ("I have liked music today" értelmetlen)
+    if (verb === "like" && tense !== "present_simple") return false;
+    const perfectTenses = ["present_perfect", "past_perfect", "future_perfect",
+        "present_perfect_continuous", "past_perfect_continuous", "future_perfect_continuous"];
+    // "I have had a book today" értelmetlen: befejezett igeidőben a "have" csak étkezésre
+    if (verb === "have" && perfectTenses.includes(tense) && !["breakfast", "a cake"].includes(obj)) return false;
+    // órákig tartó evés/reggelizés nem értelmes ("eating breakfast for two hours")
+    if (["eat", "have"].includes(verb) && tense.endsWith("perfect_continuous")) return false;
+    // "I have gone to school today" helyett angolul "I have been to school" lenne – ezt kihagyjuk
+    if (verb === "go" && tense === "present_perfect") return false;
+    // "going to the garden for two hours" értelmetlen: a "go" rövid cselekvés
+    if (verb === "go" && tense.endsWith("perfect_continuous")) return false;
+    // egy dalt nem játszunk órákig ("playing a song for two hours")
+    if (obj === "a song" && tense.endsWith("perfect_continuous")) return false;
+    // "The dog will have friends tomorrow" értelmetlen: a kutyának csak jelen időben "van" labdája/barátja
+    if (subj === "The dog" && verb === "have" && tense !== "present_simple") return false;
     // "The dog" csak "play" (with the ball/friends/in the garden) vagy "have" (a ball/friends) igével-tárggyal helyes
     if (subj === "The dog") {
         if (verb === "have" && ["a ball", "friends"].includes(obj)) return true;
@@ -209,27 +225,27 @@ const tenseTexts = {
     ],
     present_perfect: [
         "I have eaten my breakfast today. My brother has read a new book. We have had a great morning.",
-        "Anna has played with the dog today. She has liked every minute of it. The children have gone to the park too.",
+        "Anna has played with the dog today. She has enjoyed every minute of it. The children have gone to the park too.",
         "We have had a busy day today. My brother has eaten a big lunch. I have read three pages of my book.",
-        "The children have played in the garden today. Their dog has eaten its dinner. Anna has liked the sunny weather."
+        "The children have played in the garden today. Their dog has eaten its dinner. Anna has had a lovely day in the sun."
     ],
     past_perfect: [
         "Before dinner, I had eaten a snack. My brother had read his book already. We had had a busy day before that.",
-        "Anna had played with the dog before lunch. She had liked the game very much. The children had gone home before dark.",
-        "We had had breakfast before school. My brother had eaten quickly. I had read my homework the night before.",
-        "The dog had eaten its food before Anna came home. The children had played outside before dinner. Anna had liked the surprise before she left."
+        "Anna had played with the dog before lunch. She had enjoyed the game very much. The children had gone home before dark.",
+        "We had had breakfast before school. My brother had eaten quickly. I had done my homework the night before.",
+        "The dog had eaten its food before Anna came home. The children had played outside before dinner. Anna had opened her presents before she left."
     ],
     future_perfect: [
         "By tomorrow, I will have eaten all my breakfast. My brother will have read his new book. We will have had a busy week.",
-        "By next week, Anna will have played every game. She will have liked most of them. The children will have gone to the park many times.",
+        "By next week, Anna will have played every game. She will have won most of them. The children will have gone to the park many times.",
         "By tomorrow evening, we will have had dinner together. My brother will have eaten his favourite meal. I will have read two more chapters.",
-        "By the weekend, the dog will have eaten all its food. The children will have played outside a lot. Anna will have liked every game."
+        "By the weekend, the dog will have eaten all its food. The children will have played outside a lot. Anna will have read three new books."
     ],
     present_perfect_continuous: [
         "I have been playing in the park for an hour. My brother has been reading for a while too. We have been having a lot of fun.",
         "Anna has been reading her book for an hour. The children have been playing outside all morning. Their dog has been eating its treats slowly.",
         "We have been having breakfast for twenty minutes. My brother has been eating very slowly today. I have been reading the same page for ages.",
-        "The dog has been playing with its ball for an hour. Anna has been going to the shop and back. The children have been having fun all day."
+        "The dog has been playing with its ball for an hour. Anna has been helping in the shop all day. The children have been having fun all day."
     ],
     past_perfect_continuous: [
         "I had been playing outside before six yesterday. My brother had been reading for an hour before that. We had been having a great afternoon.",
@@ -239,7 +255,7 @@ const tenseTexts = {
     ],
     future_perfect_continuous: [
         "By tomorrow, I will have been playing this game for two hours. My brother will have been reading for a long time too. We will have been having fun all day.",
-        "By next week, Anna will have been reading that book for two hours every day. The children will have been playing outside a lot. Their dog will have been eating well all week.",
+        "By next week, Anna will have been reading that book for a whole month. The children will have been playing outside a lot. Their dog will have been eating well all week.",
         "By tomorrow evening, we will have been having lessons for three hours. My brother will have been eating snacks all day. I will have been reading since morning.",
         "By the end of the trip, the dog will have been playing with its ball for hours. Anna will have been going to the park every day. The children will have been having a wonderful time."
     ],

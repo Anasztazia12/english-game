@@ -1,35 +1,52 @@
 // ===================== Tense Workshop oldal =====================
 // Generált mondatok minden igeidőben + kézzel írt vegyes feladatok
 
+// poss = birtokos névmás (Tom rides HIS bike, the children do THEIR homework)
 const TW_PEOPLE = [
-    { s: "I", p: "I" }, { s: "You", p: "pl" }, { s: "We", p: "pl" }, { s: "They", p: "pl" },
-    { s: "He", p: "3" }, { s: "She", p: "3" }, { s: "Tom", p: "3" }, { s: "My sister", p: "3" },
-    { s: "The children", p: "pl" }, { s: "Our teacher", p: "3" }
+    { s: "I", p: "I", poss: "my" }, { s: "You", p: "pl", poss: "your" }, { s: "We", p: "pl", poss: "our", plural: true },
+    { s: "They", p: "pl", poss: "their", plural: true }, { s: "He", p: "3", poss: "his" }, { s: "She", p: "3", poss: "her" },
+    { s: "Tom", p: "3", poss: "his" }, { s: "My sister", p: "3", poss: "her" },
+    { s: "The children", p: "pl", poss: "their", plural: true }, { s: "Our teacher", p: "3", poss: "her" }
 ];
 
-// Az igealakokat kiírjuk, hogy ne kelljen helyesírási szabályokat programozni
+// Az igealakokat kiírjuk, hogy ne kelljen helyesírási szabályokat programozni.
+// Hogy minden mondatnak legyen értelme:
+//   habit = a tevékenységhez illő "szokás" időhatározó (Present Simple)
+//   long  = órákig tarthat (for two hours, since 10 o'clock)
+//   fin   = be lehet fejezni (by tonight, by 6 o'clock)
+//   out   = kint történik (nem jöhet "the lights went out" stb.)
+//   never = értelmes vele a "has never …" (élmény)
+//   {poss} helyére a birtokos névmás kerül; op = tárgy többes számú alanyhoz (their bikes)
 const TW_ACTIONS = [
-    { v: "read", s: "reads", ing: "reading", past: "read", pp: "read", o: "a comic" },
-    { v: "write", s: "writes", ing: "writing", past: "wrote", pp: "written", o: "a letter" },
-    { v: "eat", s: "eats", ing: "eating", past: "ate", pp: "eaten", o: "a sandwich" },
-    { v: "play", s: "plays", ing: "playing", past: "played", pp: "played", o: "football" },
-    { v: "watch", s: "watches", ing: "watching", past: "watched", pp: "watched", o: "a film" },
-    { v: "build", s: "builds", ing: "building", past: "built", pp: "built", o: "a sandcastle" },
-    { v: "draw", s: "draws", ing: "drawing", past: "drew", pp: "drawn", o: "a dragon" },
-    { v: "swim", s: "swims", ing: "swimming", past: "swam", pp: "swum", o: "in the lake" },
-    { v: "ride", s: "rides", ing: "riding", past: "rode", pp: "ridden", o: "a bike" },
-    { v: "make", s: "makes", ing: "making", past: "made", pp: "made", o: "a cake" },
-    { v: "sing", s: "sings", ing: "singing", past: "sang", pp: "sung", o: "a song" },
-    { v: "clean", s: "cleans", ing: "cleaning", past: "cleaned", pp: "cleaned", o: "the kitchen" },
-    { v: "drink", s: "drinks", ing: "drinking", past: "drank", pp: "drunk", o: "orange juice" },
-    { v: "cook", s: "cooks", ing: "cooking", past: "cooked", pp: "cooked", o: "dinner" },
-    { v: "fly", s: "flies", ing: "flying", past: "flew", pp: "flown", o: "a kite" },
-    { v: "take", s: "takes", ing: "taking", past: "took", pp: "taken", o: "photos" },
-    { v: "do", s: "does", ing: "doing", past: "did", pp: "done", o: "homework" },
-    { v: "study", s: "studies", ing: "studying", past: "studied", pp: "studied", o: "English" },
-    { v: "carry", s: "carries", ing: "carrying", past: "carried", pp: "carried", o: "a heavy bag" },
-    { v: "paint", s: "paints", ing: "painting", past: "painted", pp: "painted", o: "a picture" }
+    { v: "read", s: "reads", ing: "reading", past: "read", pp: "read", o: "{poss} comic", op: "{poss} comics", habit: ["every evening", "before bed"], long: true, fin: true },
+    { v: "write", s: "writes", ing: "writing", past: "wrote", pp: "written", o: "a letter to {poss} grandma", habit: ["every month"], fin: true, never: true },
+    { v: "eat", s: "eats", ing: "eating", past: "ate", pp: "eaten", o: "{poss} lunch", habit: ["at 12 o'clock", "at school"], fin: true },
+    { v: "play", s: "plays", ing: "playing", past: "played", pp: "played", o: "football", habit: ["on Saturdays", "after school"], long: true, out: true, never: true },
+    { v: "watch", s: "watches", ing: "watching", past: "watched", pp: "watched", o: "a film", habit: ["on Friday evenings"], long: true, fin: true },
+    { v: "build", s: "builds", ing: "building", past: "built", pp: "built", o: "a sandcastle", habit: ["every summer"], long: true, fin: true, out: true, never: true },
+    { v: "draw", s: "draws", ing: "drawing", past: "drew", pp: "drawn", o: "a dragon", habit: ["in every art lesson"], fin: true, never: true },
+    { v: "swim", s: "swims", ing: "swimming", past: "swam", pp: "swum", o: "in the lake", habit: ["every summer"], long: true, out: true, never: true },
+    { v: "ride", s: "rides", ing: "riding", past: "rode", pp: "ridden", o: "{poss} bike", op: "{poss} bikes", habit: ["to school every day"], long: true, out: true },
+    { v: "make", s: "makes", ing: "making", past: "made", pp: "made", o: "a cake", habit: ["every Sunday"], fin: true, never: true },
+    { v: "sing", s: "sings", ing: "singing", past: "sang", pp: "sung", o: "in the school choir", habit: ["every Tuesday"], long: true, never: true },
+    { v: "clean", s: "cleans", ing: "cleaning", past: "cleaned", pp: "cleaned", o: "{poss} room", op: "{poss} rooms", habit: ["every Saturday"], long: true, fin: true },
+    { v: "drink", s: "drinks", ing: "drinking", past: "drank", pp: "drunk", o: "a glass of milk", habit: ["before bed", "every morning"], fin: true },
+    { v: "cook", s: "cooks", ing: "cooking", past: "cooked", pp: "cooked", o: "dinner", habit: ["every evening"], long: true, fin: true, never: true },
+    { v: "fly", s: "flies", ing: "flying", past: "flew", pp: "flown", o: "a kite", habit: ["on windy days"], long: true, out: true, never: true },
+    { v: "take", s: "takes", ing: "taking", past: "took", pp: "taken", o: "photos of birds", habit: ["at the weekend"], long: true, out: true, never: true },
+    { v: "do", s: "does", ing: "doing", past: "did", pp: "done", o: "{poss} homework", habit: ["after school", "every evening"], long: true, fin: true },
+    { v: "study", s: "studies", ing: "studying", past: "studied", pp: "studied", o: "for the test", habit: ["every evening"], long: true },
+    { v: "walk", s: "walks", ing: "walking", past: "walked", pp: "walked", o: "the dog", habit: ["every morning"], long: true, out: true },
+    { v: "paint", s: "paints", ing: "painting", past: "painted", pp: "painted", o: "a picture of the sea", habit: ["in art lessons"], long: true, fin: true, never: true },
+    { v: "visit", s: "visits", ing: "visiting", past: "visited", pp: "visited", o: "{poss} grandma", habit: ["every Sunday"], fin: true }
 ];
+
+// Személy + hozzá illő tevékenység (a {poss} kicserélve). need: "long" / "fin" / "never" szűrő
+function pickPA(need, people) {
+    const p = pick(people || TW_PEOPLE);
+    const base = pick(TW_ACTIONS.filter(a => !need || a[need]));
+    return { p, a: Object.assign({}, base, { o: (p.plural && base.op ? base.op : base.o).replace("{poss}", p.poss) }) };
+}
 
 const be = p => p.p === "I" ? "am" : p.p === "3" ? "is" : "are";
 const was = p => p.p === "pl" ? "were" : "was";
@@ -39,7 +56,7 @@ const doAux = p => p.p === "3" ? "does" : "do";
 // Igeidők: név, időhatározók, alak, képlet, és hogy melyik igeidők "biztosan rosszak" ugyanazzal az időhatározóval
 const TW_TENSES = {
     present_simple: {
-        label: "Present Simple", markers: ["every day", "every weekend", "on Saturdays"],
+        label: "Present Simple", markers: ["every day", "usually", "on Saturdays"], habit: true,
         form: (p, a) => p.p === "3" ? a.s : a.v,
         formula: "verb / verb + s (he, she, it)", example: "She plays football every day.",
         wrong: ["past_simple", "will", "past_continuous", "present_perfect"]
@@ -57,7 +74,7 @@ const TW_TENSES = {
         wrong: ["present_simple", "will", "present_perfect", "present_continuous"]
     },
     past_continuous: {
-        label: "Past Continuous", markers: ["at 8 o'clock last night", "when the phone rang"],
+        label: "Past Continuous", markers: ["at 5 o'clock yesterday", "at this time yesterday"],
         form: (p, a) => `${was(p)} ${a.ing}`,
         formula: "was / were + -ing", example: "She was playing football when it started to rain.",
         wrong: ["present_simple", "will", "present_perfect", "present_continuous"]
@@ -69,25 +86,25 @@ const TW_TENSES = {
         wrong: ["present_simple", "will", "present_continuous", "past_continuous"]
     },
     present_perfect_continuous: {
-        label: "Present Perfect Continuous", markers: ["for two hours", "since this morning"],
+        label: "Present Perfect Continuous", markers: ["for two hours", "since 10 o'clock"], need: "long",
         form: (p, a) => `${have(p)} been ${a.ing}`,
         formula: "have / has been + -ing", example: "She has been playing football for two hours.",
         wrong: ["present_simple", "will", "present_continuous", "future_continuous"]
     },
     past_perfect: {
-        label: "Past Perfect", markers: ["before Mum came home", "by the time the bell rang"],
+        label: "Past Perfect", markers: ["before Mum came home", "before the bell rang"],
         form: (p, a) => `had ${a.pp}`,
         formula: "had + past participle", example: "She had played football before Mum came home.",
         wrong: ["present_simple", "will", "present_continuous", "present_perfect"]
     },
     past_perfect_continuous: {
-        label: "Past Perfect Continuous", markers: ["for an hour before the rain started"],
+        label: "Past Perfect Continuous", markers: ["for an hour before it started to rain"], need: "long",
         form: (p, a) => `had been ${a.ing}`,
-        formula: "had been + -ing", example: "She had been playing for an hour before the rain started.",
+        formula: "had been + -ing", example: "She had been playing for an hour before it started to rain.",
         wrong: ["present_simple", "will", "present_continuous", "present_perfect"]
     },
     will: {
-        label: "Future Simple (will)", markers: ["tomorrow", "next week"],
+        label: "Future Simple (will)", markers: ["tomorrow", "next weekend"],
         form: (p, a) => `will ${a.v}`,
         formula: "will + verb", example: "She will play football tomorrow.",
         wrong: ["past_simple", "present_perfect", "past_continuous", "present_simple"]
@@ -105,13 +122,13 @@ const TW_TENSES = {
         wrong: ["past_simple", "present_perfect", "past_continuous", "present_simple"]
     },
     future_perfect: {
-        label: "Future Perfect", markers: ["by next Friday", "by the end of the year"],
+        label: "Future Perfect", markers: ["by tonight", "by 6 o'clock"], need: "fin",
         form: (p, a) => `will have ${a.pp}`,
-        formula: "will have + past participle", example: "She will have played ten matches by next Friday.",
+        formula: "will have + past participle", example: "She will have finished her homework by 6 o'clock.",
         wrong: ["past_simple", "present_continuous", "past_continuous", "present_simple"]
     },
     future_perfect_continuous: {
-        label: "Future Perfect Continuous", markers: ["for three hours by 6 o'clock"],
+        label: "Future Perfect Continuous", markers: ["for three hours by 6 o'clock"], need: "long",
         form: (p, a) => `will have been ${a.ing}`,
         formula: "will have been + -ing", example: "She will have been playing for three hours by 6 o'clock.",
         wrong: ["past_simple", "present_continuous", "past_continuous", "present_simple"]
@@ -121,8 +138,10 @@ const TENSE_KEYS = Object.keys(TW_TENSES);
 const TENSE_LABELS = TENSE_KEYS.map(k => TW_TENSES[k].label);
 
 function randomSentence(tenseKey) {
-    const p = pick(TW_PEOPLE), a = pick(TW_ACTIONS), t = TW_TENSES[tenseKey];
-    return { p, a, t, marker: pick(t.markers), form: t.form(p, a) };
+    const t = TW_TENSES[tenseKey];
+    const { p, a } = pickPA(t.need);
+    // Present Simple-nél a tevékenységhez illő szokás-időhatározó kell (rides his bike to school every day)
+    return { p, a, t, marker: pick(t.habit ? a.habit : t.markers), form: t.form(p, a) };
 }
 
 // Időhatározó-nyomozó: a mondatban van időhatározó, a gyerek kiválasztja az igealakot
@@ -150,15 +169,15 @@ function spotTenseQ() {
 
 // Tagadás: helyes és tipikusan rossz tagadó mondatok
 function negativeQ() {
-    const a = pick(TW_ACTIONS), p = pick(TW_PEOPLE);
+    const { p, a } = pickPA();
     const S = p.s;
     const kind = pick(["ps", "past", "pc", "pp", "will"]);
     let positive, right, wrong, explain;
     if (kind === "ps") {
-        const d = doAux(p), other = d === "does" ? "don't" : "doesn't";
-        positive = `${S} ${p.p === "3" ? a.s : a.v} ${a.o} every day.`;
-        right = `${S} ${d}n't ${a.v} ${a.o} every day.`;
-        wrong = [`${S} ${other} ${a.v} ${a.o} every day.`, `${S} ${d}n't ${a.s} ${a.o} every day.`, `${S} not ${p.p === "3" ? a.s : a.v} ${a.o} every day.`];
+        const d = doAux(p), other = d === "does" ? "don't" : "doesn't", h = pick(a.habit);
+        positive = `${S} ${p.p === "3" ? a.s : a.v} ${a.o} ${h}.`;
+        right = `${S} ${d}n't ${a.v} ${a.o} ${h}.`;
+        wrong = [`${S} ${other} ${a.v} ${a.o} ${h}.`, `${S} ${d}n't ${a.s} ${a.o} ${h}.`, `${S} not ${p.p === "3" ? a.s : a.v} ${a.o} ${h}.`];
         explain = "Present Simple negative: <b>don't / doesn't + verb</b> (no -s after doesn't!)";
     } else if (kind === "past") {
         positive = `${S} ${a.past} ${a.o} yesterday.`;
@@ -190,14 +209,15 @@ function negativeQ() {
 // Kérdés: szórendi feladat
 function lowerSubject(s) { return ["I", "Tom"].includes(s) ? s : s.charAt(0).toLowerCase() + s.slice(1); }
 function questionQ() {
-    const a = pick(TW_ACTIONS), p = pick(TW_PEOPLE.filter(x => x.s !== "I"));
+    // kérdésben "I" helyett a többi személy, és a "you" a kérdezett (your bike)
+    const { p, a } = pickPA(null, TW_PEOPLE.filter(x => !["I", "We"].includes(x.s)));
     const s = lowerSubject(p.s);
     const kind = pick(["ps", "past", "pc", "pp", "will", "going_to"]);
     const q = {
-        ps: [`${capitalize(doAux(p))} ${s} ${a.v} ${a.o} every day?`, "Present Simple: <b>Do / Does</b> + subject + verb?"],
+        ps: [`${capitalize(doAux(p))} ${s} ${a.v} ${a.o} ${pick(a.habit)}?`, "Present Simple: <b>Do / Does</b> + subject + verb?"],
         past: [`Did ${s} ${a.v} ${a.o} yesterday?`, "Past Simple: <b>Did</b> + subject + verb?"],
         pc: [`${capitalize(be(p))} ${s} ${a.ing} ${a.o} right now?`, "Present Continuous: <b>Am / Is / Are</b> + subject + -ing?"],
-        pp: [`${capitalize(have(p))} ${s} ever ${a.pp} ${a.o}?`, "Present Perfect: <b>Have / Has</b> + subject + (ever) + past participle?"],
+        pp: [`${capitalize(have(p))} ${s} already ${a.pp} ${a.o}?`, "Present Perfect: <b>Have / Has</b> + subject + (already) + past participle?"],
         will: [`Will ${s} ${a.v} ${a.o} tomorrow?`, "Future: <b>Will</b> + subject + verb?"],
         going_to: [`${capitalize(be(p))} ${s} going to ${a.v} ${a.o} next weekend?`, "Going to: <b>Am / Is / Are</b> + subject + going to + verb?"]
     }[kind];
@@ -212,7 +232,7 @@ const MIXED_TENSES = [
     ["I ___ (live) in this town since 2018.", ["have lived", "have been living"], "since + still true → Present Perfect"],
     ["While I ___ (walk) home, it started to rain.", ["was walking"], "An action in progress in the past → Past Continuous"],
     ["By the time we arrived, the film ___ (already start).", ["had already started"], "Earlier than another past action → Past Perfect"],
-    ["Next summer we ___ (go) to Italy. We've already bought the tickets.", ["are going to go", "are going"], "A plan → going to / Present Continuous"],
+    ["Next summer we ___ (go) to Italy. We've already bought the tickets.", ["are going to go", "are going", "will go"], "A plan → going to / Present Continuous (will go is also OK)"],
     ["I think it ___ (rain) tomorrow.", ["will rain"], "I think… → Future Simple (will)"],
     ["She usually ___ (get up) at 7 o'clock.", ["gets up"], "usually → Present Simple"],
     ["Have you ever ___ (see) a ghost?", ["seen"], "Have you ever…? → past participle"],
@@ -228,7 +248,7 @@ const MIXED_TENSES = [
     ["The sun ___ (rise) in the east.", ["rises"], "A fact → Present Simple"],
     ["I ___ (read) this book twice already.", ["have read"], "already → Present Perfect"],
     ["At 9 o'clock last night, I ___ (watch) TV.", ["was watching"], "At a time in the past → Past Continuous"],
-    ["She was tired because she ___ (run) for an hour.", ["had been running"], "Before a past moment, for a long time → Past Perfect Continuous"],
+    ["She was tired because she ___ (run) for an hour.", ["had been running", "had run"], "Before a past moment, for a long time → Past Perfect Continuous"],
     ["My mum ___ (work) in a hospital.", ["works"], "A permanent fact → Present Simple"],
     ["Listen! Someone ___ (knock) at the door.", ["is knocking"], "Listen! → Present Continuous"],
     ["We ___ (not go) to school tomorrow. It's a holiday.", ["aren't going", "are not going", "won't go", "will not go"], "Future negative"]
@@ -239,13 +259,13 @@ const SIGNAL_WORDS = [
     ["every day", "present_simple"], ["usually / often / always", "present_simple"],
     ["now / right now / at the moment", "present_continuous"], ["Look! / Listen!", "present_continuous"],
     ["yesterday", "past_simple"], ["last week / last year", "past_simple"], ["… ago (two days ago)", "past_simple"],
-    ["in 2010", "past_simple"], ["at 8 o'clock last night", "past_continuous"],
+    ["in 2010", "past_simple"], ["at 5 o'clock yesterday", "past_continuous"],
     ["while … (an action in progress in the past)", "past_continuous"],
     ["already / yet / just", "present_perfect"], ["ever / never", "present_perfect"],
     ["for two hours / since this morning (still going)", "present_perfect_continuous"],
     ["by the time … (in the past)", "past_perfect"], ["tomorrow / I think … / probably", "will"],
     ["Look at those clouds! (we can see it coming)", "going_to"],
-    ["this time tomorrow", "future_continuous"], ["by next Friday", "future_perfect"]
+    ["this time tomorrow", "future_continuous"], ["by 6 o'clock tonight", "future_perfect"]
 ];
 
 function renderTenseTable(area) {
@@ -261,45 +281,49 @@ function renderTenseTable(area) {
 
 // ---------- Két igeidő összehasonlítása (véletlen mondatokkal) ----------
 function simpleOrContinuousQ() {
-    const p = pick(TW_PEOPLE), a = pick(TW_ACTIONS);
+    const { p, a } = pickPA();
     const ps = TW_TENSES.present_simple.form(p, a), pc = TW_TENSES.present_continuous.form(p, a);
     if (Math.random() < 0.5) {
-        const m = pick(["every day", "on Saturdays", "every weekend", "twice a week"]);
+        const m = pick(a.habit);
         return choiceQ(`${p.s} ___ ${a.o} <b>${m}</b>.`, ps, [pc], "A habit or routine → <b>Present Simple</b>.");
     }
     const m = pick(["right now", "at the moment", "now"]);
     return choiceQ(`${p.s} ___ ${a.o} <b>${m}</b>.`, pc, [ps], "Happening now → <b>Present Continuous</b> (am / is / are + -ing).");
 }
 
+// in: csak bent történhet (pl. kint úszás közben nem "a bird flew into the room")
+// out: csak kint; ing: a was/were + -ing alak a rossz válaszhoz
 const INTERRUPTIONS = [
-    { s: "the phone", v: "ring", past: "rang", rest: "" },
-    { s: "the lights", v: "go", past: "went", rest: " out" },
-    { s: "it", v: "start", past: "started", rest: " to rain" },
-    { s: "the doorbell", v: "ring", past: "rang", rest: "" },
-    { s: "Mum", v: "call", past: "called", rest: " us" },
-    { s: "the dog", v: "bark", past: "barked", rest: " loudly" },
-    { s: "a bird", v: "fly", past: "flew", rest: " into the room" }
+    { s: "the phone", v: "ring", past: "rang", ing: "ringing", rest: "", in: true },
+    { s: "the lights", v: "go", past: "went", ing: "going", rest: " out", in: true },
+    { s: "the doorbell", v: "ring", past: "rang", ing: "ringing", rest: "", in: true },
+    { s: "a bird", v: "fly", past: "flew", ing: "flying", rest: " into the room", in: true },
+    { s: "it", v: "start", past: "started", ing: "starting", rest: " to rain" },
+    { s: "Mum", v: "come", past: "came", ing: "coming", rest: " home", in: true },
+    { s: "a dog", v: "run", past: "ran", ing: "running", rest: " past", out: true },
+    { s: "a strong wind", v: "blow", past: "blew", ing: "blowing", rest: " through the trees", out: true }
 ];
 function whenWhileQ() {
-    const p = pick(TW_PEOPLE), a = pick(TW_ACTIONS), i = pick(INTERRUPTIONS);
+    const { p, a } = pickPA();
+    const i = pick(INTERRUPTIONS.filter(x => a.out ? !x.in : !x.out));
     const long = `${was(p)} ${a.ing}`;
     if (Math.random() < 0.5) {
         return choiceQ(`<b>While</b> ${lowerSubject(p.s)} ___ (${a.v}) ${a.o}, ${i.s} ${i.past}${i.rest}.`, long, [`${be(p)} ${a.ing}`, `${was(p) === "was" ? "were" : "was"} ${a.ing}`],
             "The long action in progress → <b>Past Continuous</b> (was / were + -ing). <b>While</b> often goes with it.");
     }
-    return choiceQ(`${p.s} ${long} ${a.o} <b>when</b> ${i.s} ___ (${i.v})${i.rest}.`, i.past, [`was ${i.v}ing`.replace("eing", "ing"), i.v],
+    return choiceQ(`${p.s} ${long} ${a.o} <b>when</b> ${i.s} ___ (${i.v})${i.rest}.`, i.past, [`will ${i.v}`, i.s === "the lights" ? "go" : i.v === "fly" ? "flies" : i.v + "s"],
         "The short action that interrupts → <b>Past Simple</b>. <b>When</b> often goes with it.");
 }
 
 function pastOrPerfectQ() {
-    const p = pick(TW_PEOPLE), a = pick(TW_ACTIONS);
-    const past = a.past, perf = `${have(p)} ${a.pp}`;
-    if (Math.random() < 0.5) {
-        const m = pick(["yesterday", "last week", "two days ago", "in 2020", "last summer"]);
-        return choiceQ(`${p.s} ___ ${a.o} <b>${m}</b>. <span class="q-hint">(${a.v})</span>`, past, [perf],
-            `A finished time in the past (<b>${m}</b>) → <b>Past Simple</b>.`);
+    const m = pick(["past", "never", "just", "already"]);
+    // "has never …" csak élmény-szerű tevékenységgel értelmes (never made a cake, de nem: never eaten his lunch)
+    const { p, a } = pickPA(m === "never" ? "never" : null);
+    if (m === "past") {
+        const t = pick(["yesterday", "last weekend", "two days ago"]);
+        return choiceQ(`${p.s} ___ ${a.o} <b>${t}</b>. <span class="q-hint">(${a.v})</span>`, a.past, [`${have(p)} ${a.pp}`],
+            `A finished time in the past (<b>${t}</b>) → <b>Past Simple</b>.`);
     }
-    const m = pick(["never", "just", "already"]);
     return choiceQ(`${p.s} ___ ${a.o}. <span class="q-hint">(${m} + ${a.v})</span>`, `${have(p)} ${m} ${a.pp}`, [`${have(p)} ${m} ${a.ing}`, `${have(p)} ${m} ${a.past}`, `${have(p)} ${m} ${a.v}`],
         `<b>${m}</b> → <b>Present Perfect</b> (have / has + ${m} + past participle).`);
 }

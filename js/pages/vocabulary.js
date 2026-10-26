@@ -60,7 +60,9 @@ function wordGames(list, prefix) {
         {
             id: `${prefix}-fits`, title: "Which word fits?", emoji: "🧩",
             intro: "Choose the word that completes the sentence.",
-            make: () => list.map(w => choiceQ(w.sentence, w.word, sample(others(w), 3).map(x => x.word), `<b>${w.word}</b> = ${w.meaning}`))
+            make: () => list.map(w => choiceQ(w.sentence, w.word,
+                // csak más szófajú szavak, hogy biztosan csak egy illjen a mondatba
+                sample(others(w).filter(x => differentClass(x, w)), 3).map(x => x.word), `<b>${w.word}</b> = ${w.meaning}`))
         },
         {
             id: `${prefix}-guess`, title: "Guess the word", emoji: "🔎",

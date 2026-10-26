@@ -105,3 +105,18 @@ const YEAR34_WORDS = [
     ["weight", "how heavy something is", "wieght|weigth|weght", "What is the ___ of this box?"],
     ["women", "more than one woman", "wimen|womans|wemen", "Two ___ were waiting at the bus stop."]
 ].map(([word, meaning, wrong, sentence]) => ({ word, meaning, wrong: wrong.split("|"), sentence }));
+
+tagClasses(YEAR34_WORDS, {
+    v: "appear arrive believe breathe build consider continue decide describe disappear guard imagine increase learn mention notice promise remember suppose",
+    vp: "caught heard thought",
+    adj: "busy certain complete different difficult eighth enough extreme famous favourite important natural naughty ordinary particular peculiar popular possible recent regular separate special straight strange various",
+    adv: "accidentally actually early forward occasionally often perhaps probably",
+    other: "although therefore through opposite",
+    n: "guard notice promise increase answer address exercise experiment interest mention question surprise guide build position minute opposite special complete regular straight early forward"
+});
+// kettős szófajú szavak második szófaja (pl. answer = főnév és ige)
+tagClasses(YEAR34_WORDS, {
+    v: "answer address exercise experiment interest question surprise guide complete separate",
+    adj: "minute opposite early forward",
+    adv: "straight"
+});

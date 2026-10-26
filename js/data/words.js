@@ -109,3 +109,27 @@ const YEAR56_WORDS = [
 function fillSentence(sentence, word) {
     return sentence.startsWith("___") ? capitalize(word) + sentence.slice(3) : sentence.replace("___", word);
 }
+
+// Szófajok (n = főnév, v = ige, adj = melléknév, adv = határozószó, vp = múlt idejű ige, other).
+// Egy szó több szófajú is lehet (answer = főnév és ige). A "Which word fits?" játékban csak olyan
+// rossz válaszokat adunk, amelyeknek NINCS közös szófaja a helyes szóval, így mindig csak egy szó illik a mondatba.
+function tagClasses(list, classes) {
+    Object.entries(classes).forEach(([cls, words]) => words.split(" ").forEach(w => {
+        const item = list.find(x => x.word === w);
+        if (item) item.cls = (item.cls || []).concat(cls);
+    }));
+    list.forEach(x => { if (!x.cls) x.cls = ["n"]; });
+}
+// melléknév helyére főnév sem lehet rossz válasz, mert összetételt adhat ("guide animals")
+function differentClass(a, b) {
+    if (b.cls.includes("adj") && a.cls.includes("n")) return false;
+    return !a.cls.some(c => b.cls.includes(c));
+}
+tagClasses(YEAR56_WORDS, {
+    v: "accommodate accompany achieve appreciate communicate correspond criticise develop embarrass exaggerate harass interfere interrupt occupy occur persuade recognise recommend rhyme suggest",
+    adj: "aggressive amateur ancient apparent attached available average awkward conscious definite desperate determined disastrous excellent familiar foreign forty marvellous mischievous necessary physical relevant sufficient thorough twelfth",
+    adv: "according especially frequently immediately sincerely",
+    n: "guarantee sacrifice queue rhyme average amateur individual forty physical prejudice programme muscle bruise leisure"
+});
+// kettős szófajú szavak második szófaja (pl. guarantee = főnév és ige)
+tagClasses(YEAR56_WORDS, { v: "guarantee sacrifice queue prejudice programme bruise", adj: "individual" });
