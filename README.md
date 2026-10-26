@@ -1,50 +1,39 @@
 # English Game
 
-An interactive web-based game for practicing English sentences, designed for children (Year 3–5) and beginner learners.
+An interactive web-based game for practicing English sentences, designed for children (Year 5–6) and beginner learners.
 
-## Game Modes
+## Pages
 
-- **Fill in the blank:** Choose the correct word to complete the sentence.
-- **Sentence order:** Arrange the given words to form a correct sentence.
+`index.html` is the main menu. Each topic page has topics → games (two-level menu).
 
-## Features
-
-- 100+ randomly generated sentences per session
-- Two difficulty levels: Easy and Hard
-- Instant feedback with sound effects
-- Colorful, child-friendly design
-- All interface and feedback in English
+| Page | What's inside |
+|------|---------------|
+| `challenge.html` | Random Challenge: random mixes from every topic (quick 5, tenses, words, grammar, writing, big test) |
+| `tenses.html` | Classic Tense Game: reading text, fill in the blank, sentence order (all 12 tenses) |
+| `tense-workshop.html` | Time detective, verb doctor, spot the tense, negatives, questions, mixed tenses, signal words, tense table |
+| `vocabulary.html` | The Year 3–4 and Year 5–6 statutory words (meaning, gap fill, guess, unscramble, word list) and irregular verbs |
+| `spelling.html` | Correct spelling, missing letters, listen & spell, spot the mistake, plurals, -ing/-ed, suffixes, tricky endings, ie/ei, -ough, silent letters, homophones |
+| `grammar.html` | Prefixes & suffixes, conjunctions & openers, reference words, modal verbs, auxiliary verbs & question tags, question words, comparatives & superlatives |
+| `writing.html` | Story structure (introduction, development, climax, ending), speech marks, punctuation, contractions, story writer and dialogue writer with automatic checklist |
 
 ## How to Play
 
-1. Open `index.html` in your browser.
-2. Select a difficulty (Easy/Hard).
-3. Choose a game mode.
-4. Play and practice English sentences!
-
-## Customization & Development
-
-- All game logic is now in `english-game.js`. To add new sentence patterns, verbs, or objects, edit this file.
-- The HTML (`index.html`) only contains the UI structure and loads the JS.
-- To change sound effects, replace `correct.mp3` and `wrong.mp3` (if present).
-- For design changes, edit `style.css`.
+1. Open `index.html` in your browser (no server needed).
+2. Choose a topic, then a game.
+3. Wrong answers show the rule; at the end you see your score and what to learn.
+4. Questions are chosen at random, and the game remembers which ones you have seen, so new ones come first.
 
 ## File Structure
 
-- `index.html` – Main HTML, loads the UI and JS
-- `english-game.js` – All game logic, question generation, and state
-- `style.css` – All styles, responsive and modern look
-
-## How to Use / Run
-
-1. Download or clone the repository.
-2. Open `index.html` in your browser (no server needed).
-3. Play!
+- `js/english-game.js` – the classic Tense Game
+- `js/quiz-engine.js` – shared quiz engine for all other pages (choice, typing, listening, ordering)
+- `js/data/words.js`, `js/data/words34.js` – Year 5–6 and Year 3–4 word lists; `js/data/verbs.js` – irregular and regular verbs
+- `js/pages/*.js` – the games and question banks of each page
+- `style.css` – base style; `pages.css` – menu, quiz and writing tool styles
 
 ## Extending the Game
 
-- To add new verbs or objects, update the `verbs` and `verbObjects` in `english-game.js`.
-- To add new game modes, create new functions in `english-game.js` and add UI in `index.html`.
+- Add a question to a bank in `js/pages/<page>.js`, or a new game object to a section's `games` list.
 
 ## Requirements
 

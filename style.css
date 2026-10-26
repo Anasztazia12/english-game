@@ -26,9 +26,9 @@ h1 {
     font-weight: 800;
     font-size: 2.4rem;
     margin-bottom: 24px;
-    color: var(--berry);
-    -webkit-text-stroke: 1.5px #fff;
-    text-shadow: 0 3px 0 #fff, 0 6px 12px rgba(0,0,0,0.15);
+    color: #6A1B9A;
+    letter-spacing: 0.5px;
+    text-shadow: 0 3px 0 #FFD54F;
     animation: titleBounce 2.4s ease-in-out infinite;
 }
 
@@ -69,7 +69,7 @@ h2 {
 
 /* button base: chunky "gummy" game buttons */
 #game-area button, #start-area button, #tense-select button, #difficulty-select button,
-#text-area button, #game-nav button, #final-actions button, #next-btn {
+#text-area button, #game-nav button, #final-actions button, #next-btn, #app button {
     font-family: 'Baloo 2', 'Nunito', sans-serif;
     font-weight: 700;
     font-size: 1.05rem;
@@ -119,14 +119,14 @@ h2 {
 
 /* hover effect: button "lifts up" */
 #game-area button:hover, #start-area button:hover, #tense-select button:hover,
-#difficulty-select button:hover, #text-area button:hover, #final-actions button:hover {
+#difficulty-select button:hover, #text-area button:hover, #final-actions button:hover, #app button:hover {
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 10px 16px rgba(0,0,0,0.16);
 }
 
 /* click effect: button "presses in" */
 #game-area button:active, #start-area button:active, #tense-select button:active,
-#difficulty-select button:active, #text-area button:active, #final-actions button:active {
+#difficulty-select button:active, #text-area button:active, #final-actions button:active, #app button:active {
     transform: translateY(3px) scale(0.98);
     box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.12);
 }
@@ -229,7 +229,7 @@ h2 {
     h2 { font-size: 1.15em; }
     #start-area button { font-size: 1.2rem; padding: 14px 26px; }
     #game-area button, #start-area button, #tense-select button, #difficulty-select button,
-    #text-area button, #game-nav button, #final-actions button, #next-btn {
+    #text-area button, #game-nav button, #final-actions button, #next-btn, #app button {
         min-width: 90px;
         font-size: 0.95em;
         padding: 10px 14px;
