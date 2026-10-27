@@ -189,6 +189,17 @@
     outline: none;
 }
 .answer-input:focus { border-color: var(--grape); }
+.help-row { margin-top: 4px; }
+.hint-pattern { white-space: pre-wrap; }
+#app button.help-btn {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+    margin: 3px;
+    background: #fff;
+    color: #555;
+    border: 2px solid #bbb !important;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+}
 .input-correct { border-color: var(--grass) !important; background: #EDFADF; }
 .input-wrong { border-color: var(--berry) !important; background: #FFEDF1; }
 

@@ -157,7 +157,7 @@ function verbDoctorQ() {
     const key = pick(TENSE_KEYS);
     const { p, a, t, marker, form } = randomSentence(key);
     return typeQ(`${p.s} ___ (${a.v}) ${a.o} <b>${marker}</b>.`, form, `${t.label}: ${t.formula}`,
-        { hint: `Use the <b>${t.label}</b>. Write the full form (no short forms like 's or 're).` });
+        { choices: TENSE_KEYS.map(k => TW_TENSES[k].form(p, a)), hint: `Use the <b>${t.label}</b>. Write the full form (no short forms like 's or 're).` });
 }
 
 function spotTenseQ() {
@@ -252,6 +252,20 @@ const MIXED_TENSES = [
     ["My mum ___ (work) in a hospital.", ["works"], "A permanent fact → Present Simple"],
     ["Listen! Someone ___ (knock) at the door.", ["is knocking"], "Listen! → Present Continuous"],
     ["We ___ (not go) to school tomorrow. It's a holiday.", ["aren't going", "are not going", "won't go", "will not go"], "Future negative"]
+];
+
+// Válaszlehetőségek a vegyes feladatokhoz (ugyanabban a sorrendben, mint MIXED_TENSES).
+// Csak olyan alakok, amelyek az adott mondatban biztosan rosszak.
+const MIXED_CHOICES = [
+    ["snows", "snowed", "was snowing"], ["is boiling", "boiled", "boil"], ["visit", "have visited", "were visiting"],
+    ["lived", "live", "am living"], ["walked", "am walking", "walk"], ["already started", "has already started", "already starts"],
+    ["go", "went", "have gone"], ["rains", "rained", "is raining"], ["get up", "is getting up", "got up"],
+    ["saw", "see", "seeing"], ["sleeps", "slept", "sleep"], ["don't like", "didn't liked", "not liked"],
+    ["wait", "waited", "are waiting"], ["lay", "am lying", "lying"], ["found", "have found", "finds"],
+    ["breaks", "has broken", "break"], ["finish", "finishing", "finishes"], ["meet", "have met", "meets"],
+    ["rains", "rained", "rain"], ["rise", "rose", "is rise"], ["reads", "am reading", "reading"],
+    ["watch", "am watching", "watches"], ["runs", "is running", "run"], ["work", "working", "is work"],
+    ["knocks", "knocked", "knock"], ["not go", "don't going", "isn't going"]
 ];
 
 // Időhatározók és igeidők: [jelzőszó, igeidő kulcs]
@@ -380,7 +394,7 @@ QuizApp.init({
                 {
                     id: "tw-mixed", title: "Mixed tenses", emoji: "🌈",
                     intro: "Every sentence needs a different tense. Read the clues carefully and type the verb.",
-                    make: () => MIXED_TENSES.map(([s, a, e]) => typeQ(s, a, e))
+                    make: () => MIXED_TENSES.map(([s, a, e], i) => typeQ(s, a, e, { choices: MIXED_CHOICES[i] }))
                 },
                 {
                     id: "tw-signal", title: "Signal words", emoji: "🚥",

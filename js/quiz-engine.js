@@ -33,8 +33,8 @@ function typeQ(prompt, answer, explain, extra) {
     return Object.assign({ type: "type", prompt, answer, explain }, extra);
 }
 // Diktálás: a gép felolvassa a "say" szöveget, a gyerek beírja a szót
-function listenQ(say, prompt, answer, explain) {
-    return { type: "listen", say, prompt, answer, explain };
+function listenQ(say, prompt, answer, explain, extra) {
+    return Object.assign({ type: "listen", say, prompt, answer, explain }, extra);
 }
 // Mondat sorba rendezése szavanként (a mondatvégi írásjelet levesszük, mint a régi játékban)
 function orderQ(prompt, sentence, explain) {
@@ -62,6 +62,13 @@ function answerText(q) {
         return q.blocks ? q.items.map((t, i) => `${i + 1}. ${t}`).join("\n") : q.items.join(" ") + q.end;
     }
     return Array.isArray(q.answer) ? q.answer.join("  /  ") : q.answer;
+}
+
+// Súgó minta: minden szó első betűje látszik, a többi helyén "_"  (rung → "r _ _ _")
+function letterPattern(answer) {
+    return answer.split(" ")
+        .map(w => (w.charAt(0) + w.slice(1).replace(/[A-Za-z]/g, "_")).split("").join(" "))
+        .join("   ");
 }
 
 // Felolvasás brit angol hanggal (ha a böngésző támogatja)
@@ -134,7 +141,8 @@ function pickFresh(gameId, pool, count) {
 function mixGame(id, title, games, count) {
     return {
         id, title, emoji: "🎲", count: count || QUESTIONS_PER_GAME, isMix: true,
-        intro: "Random questions from: <b>" + games.map(g => g.title).join("</b>, <b>") + "</b>.",
+        // rövid bevezető: a játékok listája túl hosszú lenne
+        intro: `🎲 <b>${count || QUESTIONS_PER_GAME} random questions</b> – a different mix every time!`,
         make: () => games.flatMap(g => sample(g.make(), 5))
     };
 }
@@ -303,9 +311,28 @@ const QuizApp = {
         if (q.type === "listen") html += `<button class="btn btn-info m-2" id="listen-btn">🔊 Listen again</button><br>`;
         if (q.hint) html += `<div class="q-hint">${q.hint}</div>`;
         html += `<input type="text" id="answer-input" class="answer-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${q.placeholder || "Type your answer…"}">
-                 <br><button class="btn btn-success m-2" id="check-btn">✔️ Check</button>`;
+                 <br><button class="btn btn-success m-2" id="check-btn">✔️ Check</button>
+                 <div class="help-row">
+                    <button type="button" class="btn btn-outline-secondary help-btn" id="hint-btn">💡 Hint</button>
+                    ${q.choices ? `<button type="button" class="btn btn-outline-secondary help-btn" id="choices-btn">🔢 Show choices</button>` : ""}
+                 </div>
+                 <div id="hint-text" class="q-hint"></div>`;
         body.innerHTML = html;
         const input = document.getElementById("answer-input");
+        const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
+        // Segítség 1: első betű + a többi betű helye (r _ _ _)
+        document.getElementById("hint-btn").onclick = () => {
+            document.getElementById("hint-text").innerHTML = `💡 <span class="letters hint-pattern">${escapeHtml(letterPattern(answers[0]))}</span>`;
+            input.focus();
+        };
+        // Segítség 2: beírás helyett válaszlehetőségek
+        if (q.choices) {
+            document.getElementById("choices-btn").onclick = () => {
+                const wrong = shuffle([...new Set(q.choices)].filter(c => !answers.includes(c))).slice(0, 3);
+                body.innerHTML = "";
+                this.renderChoice({ options: shuffle([answers[0], ...wrong]), answer: answers[0] }, body);
+            };
+        }
         const check = () => {
             if (this.locked || !input.value.trim()) return;
             const answers = Array.isArray(q.answer) ? q.answer : [q.answer];

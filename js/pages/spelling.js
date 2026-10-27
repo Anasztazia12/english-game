@@ -288,14 +288,14 @@ function spellingGames(list, prefix) {
             intro: "Some letters are missing. Type the <b>whole word</b>.",
             make: () => list.map(w => typeQ(
                 `<span class="letters">${hideLetters(w.word)}</span>`, w.word, fillSentence(w.sentence, w.word),
-                { hint: `Clue: ${w.meaning}` }))
+                { hint: `Clue: ${w.meaning}`, choices: w.wrong }))
         },
         {
             id: `${prefix}-listen`, title: "Listen and spell", emoji: "🎧",
             intro: "Listen to the word and type it. Press <b>🔊 Listen again</b> to hear it again.<br>(Turn your sound on!)",
             make: () => list.map(w => listenQ(
                 `${w.word}. ${fillSentence(w.sentence, w.word)} ${w.word}.`,
-                `Listen and type the word.<div class="q-hint">${w.sentence}</div>`, w.word, `${w.word} = ${w.meaning}`))
+                `Listen and type the word.<div class="q-hint">${w.sentence}</div>`, w.word, `${w.word} = ${w.meaning}`, { choices: w.wrong }))
         },
         {
             id: `${prefix}-spot`, title: "Spot the mistake", emoji: "🕵️",
@@ -315,7 +315,7 @@ function spellingGames(list, prefix) {
             intro: "The word is spelled wrong. Type it correctly!",
             make: () => list.map(w => typeQ(
                 `Fix the spelling: <span class="letters wrong-ans">${pick(w.wrong)}</span>`, w.word, fillSentence(w.sentence, w.word),
-                { hint: `Clue: ${w.meaning}` }))
+                { hint: `Clue: ${w.meaning}`, choices: w.wrong }))
         }
     ];
 }
@@ -340,17 +340,20 @@ QuizApp.init({
                 {
                     id: "sp-plurals", title: "Plurals", emoji: "👥",
                     intro: "Type the plural (more than one).<br>cat → cat<b>s</b> &nbsp; box → box<b>es</b> &nbsp; baby → bab<b>ies</b> &nbsp; leaf → lea<b>ves</b> &nbsp; child → <b>children</b>",
-                    make: () => PLURALS.map(([s, p, rule]) => typeQ(`one <b>${s}</b> → two ___`, p, rule))
+                    make: () => PLURALS.map(([s, p, rule]) => typeQ(`one <b>${s}</b> → two ___`, p, rule,
+                        { choices: [s + "s", s + "es", s.replace(/y$/, "ies"), s.replace(/fe?$/, "ves"), s + "ses"] }))
                 },
                 {
                     id: "sp-inged", title: "Adding -ing and -ed", emoji: "➕",
                     intro: "Add <b>-ing</b> or <b>-ed</b> and type the new word.<br>stop → sto<b>pp</b>ing &nbsp; make → mak<b>ing</b> &nbsp; cry → cr<b>ied</b> &nbsp; visit → visit<b>ed</b>",
-                    make: () => ING_ED.map(([b, suf, res, rule]) => typeQ(`<b>${b}</b> + <b>${suf}</b> = ?`, res, rule))
+                    make: () => ING_ED.map(([b, suf, res, rule]) => typeQ(`<b>${b}</b> + <b>${suf}</b> = ?`, res, rule,
+                        { choices: [b + suf, b.replace(/e$/, "") + suf, b + b.slice(-1) + suf, b.replace(/y$/, "i") + suf] }))
                 },
                 {
                     id: "sp-suffix", title: "Suffixes", emoji: "🧱",
                     intro: "Add the suffix and type the new word.<br>happy + ness → happ<b>i</b>ness &nbsp; fame + ous → fam<b>ous</b> &nbsp; care + ful → care<b>ful</b>",
-                    make: () => SUFFIXES.map(([b, suf, res, rule]) => typeQ(`<b>${b}</b> + <b>${suf}</b> = ?`, res, rule))
+                    make: () => SUFFIXES.map(([b, suf, res, rule]) => typeQ(`<b>${b}</b> + <b>${suf}</b> = ?`, res, rule,
+                        { choices: [b + suf, b.replace(/e$/, "") + suf, b.replace(/y$/, "i") + suf, b + b.slice(-1) + suf, b + suf.slice(1)] }))
                 },
                 {
                     id: "sp-endings", title: "Tricky endings", emoji: "🎯",

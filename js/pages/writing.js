@@ -537,7 +537,8 @@ QuizApp.init({
                 {
                     id: "wr-contract", title: "Contractions", emoji: "✂️",
                     intro: "Join the words and use an <b>apostrophe</b> for the missing letters: do not → don<b>'</b>t",
-                    make: () => CONTRACTIONS.map(([full, short]) => typeQ(`<b>${full}</b> → ?`, short, `${full} → <b>${short}</b>`, { exact: true }))
+                    make: () => CONTRACTIONS.map(([full, short]) => typeQ(`<b>${full}</b> → ?`, short, `${full} → <b>${short}</b>`,
+                        { exact: true, choices: [short.replace("'", ""), short.replace("'", "").slice(0, -1) + "'" + short.slice(-1), full.replace(" ", "'")] }))
                 },
                 {
                     id: "wr-fix", title: "Fix the dialogue", emoji: "🔧",

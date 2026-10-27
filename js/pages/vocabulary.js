@@ -68,13 +68,13 @@ function wordGames(list, prefix) {
             id: `${prefix}-guess`, title: "Guess the word", emoji: "🔎",
             intro: "Read the meaning and type the word. Be careful with the spelling!",
             make: () => list.map(w => typeQ(`Which word means: <b>${w.meaning}</b>?`, w.word, fillSentence(w.sentence, w.word),
-                { hint: `It starts with <b>${w.word[0]}</b> and has <b>${w.word.length}</b> letters.` }))
+                { hint: `It starts with <b>${w.word[0]}</b> and has <b>${w.word.length}</b> letters.`, choices: w.wrong }))
         },
         {
             id: `${prefix}-unscramble`, title: "Unscramble", emoji: "🔀",
             intro: "The letters are mixed up. Put them in order and type the word.",
             make: () => list.map(w => typeQ(`Unscramble: <span class="letters">${scramble(w.word).toUpperCase().split("").join(" ")}</span>`,
-                w.word, null, { hint: `Clue: ${w.meaning}` }))
+                w.word, null, { hint: `Clue: ${w.meaning}`, choices: w.wrong }))
         },
         {
             id: `${prefix}-match`, title: "Word or meaning?", emoji: "🔁",
@@ -161,13 +161,17 @@ QuizApp.init({
                     id: "irr-type", title: "Type the form", emoji: "⌨️",
                     intro: "Type the form of the verb. Spelling counts!",
                     make: () => IRREGULAR_VERBS.map(v => Math.random() < 0.5
-                        ? typeQ(`Type the <b>past simple</b> of <b>${v.base}</b>.`, v.past, verbForms(v))
-                        : typeQ(`Type the <b>past participle</b> of <b>${v.base}</b>.`, v.pp, verbForms(v)))
+                        ? typeQ(`Type the <b>past simple</b> of <b>${v.base}</b>.`, v.past, verbForms(v), { choices: [v.pp[0], v.base, naivePast(v.base), v.past[0] + "ed"] })
+                        : typeQ(`Type the <b>past participle</b> of <b>${v.base}</b>.`, v.pp, verbForms(v), { choices: [v.past[0], v.base, naivePast(v.base), v.base + "en"] }))
                 },
                 {
                     id: "irr-sentences", title: "Verbs in sentences", emoji: "📝",
                     intro: "Type the correct form of the verb in brackets.<br>Past time word (yesterday, last…) → <b>past simple</b><br>After <i>have / has</i> → <b>past participle</b>",
-                    make: () => VERB_SENTENCES.map(([s, a, e]) => typeQ(s, a, e))
+                    make: () => VERB_SENTENCES.map(([s, a, e]) => {
+                        // a zárójeles igéből rossz alakok: (see) → saw / seen / see / seed
+                        const base = s.match(/\((\w+)\)/)[1], v = IRREGULAR_VERBS.find(x => x.base === base);
+                        return typeQ(s, a, e, { choices: [v.past[0], v.pp[0], v.base, naivePast(base)] });
+                    })
                 },
                 {
                     id: "irr-regular", title: "Regular or irregular?", emoji: "⚖️",

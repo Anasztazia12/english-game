@@ -504,7 +504,8 @@ QuizApp.init({
                 {
                     id: "gr-prefix-build", title: "Build a word", emoji: "🏗️",
                     intro: "Join the prefix and the word, and type the new word.<br>Adding a prefix <b>never changes the spelling</b> of the root word: un + necessary = u<b>nn</b>ecessary",
-                    make: () => PREFIX_BUILD.map(([p, w, r]) => typeQ(`<b>${p}</b> + <b>${w}</b> = ?`, r, "Keep all the letters of the prefix and the root word."))
+                    make: () => PREFIX_BUILD.map(([p, w, r]) => typeQ(`<b>${p}</b> + <b>${w}</b> = ?`, r, "Keep all the letters of the prefix and the root word.",
+                        { choices: [p.slice(0, -1) + w, p + p.slice(-1) + w, p + w.slice(1)] }))
                 },
                 {
                     id: "gr-suffix", title: "Suffix finder", emoji: "🔚",
@@ -620,7 +621,7 @@ QuizApp.init({
                     id: "gr-sup", title: "Superlatives", emoji: "🏆",
                     intro: "Type the superlative (without <i>the</i>).<br>tall → <b>tallest</b> &nbsp; happy → <b>happiest</b> &nbsp; beautiful → <b>most beautiful</b> &nbsp; good → <b>best</b>",
                     make: () => ADJECTIVES.map(([a, c, s, rule]) => typeQ(
-                        `Type the superlative of <b>${a}</b>. <div class="q-hint">(the …)</div>`, [s, "the " + s], `${a} → ${c} → ${s}. ${rule}`))
+                        `Type the superlative of <b>${a}</b>. <div class="q-hint">(the …)</div>`, [s, "the " + s], `${a} → ${c} → ${s}. ${rule}`, { choices: wrongSuperlatives(a, c, s) }))
                 },
                 {
                     id: "gr-adj-sent", title: "Adjectives in sentences", emoji: "📝",
